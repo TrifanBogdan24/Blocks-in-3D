@@ -37,26 +37,32 @@ char*** chunk_fill_cuboid(
 
 double euclidian_dist(int x0, int y0, int z0, int x1, int y1, int z1) {
     return sqrt(
-        pow((double) (x1 - x0), SQUARE)
-        + pow((double) (y1 - y0), SQUARE)
-        + pow((double) (z1 - z0), SQUARE)
-    );
+        pow((double)(x1 - x0), SQUARE)
+        + pow((double)(y1 - y0), SQUARE)
+        + pow((double)(z1 - z0), SQUARE));
 }
-
 
 char*** chunk_fill_sphere(
     char*** chunk, int width, int height, int depth,
     int x, int y, int z, double radius, char block) {
-    for (double i = -radius; i <= radius; i++) {
-        for (double j = -radius; j <= radius; j++) {
-            for (double k = -radius; k <= radius; k++) {
-                double dist =
-                    euclidian_dist(x, y, z, x + i, y + j, z + k);
-                
-                if (dist > radius) continue;
-                chunk_place_block(chunk, width, height, depth, x + i, y + j, z + k, block);
+
+    int r = (int) ceil(radius);
+
+    for (int i = -r; i <= r; i++) {
+        for (int j = -r; j <= r; j++) {
+            for (int k = -r; k <= r; k++) {
+                double dist = euclidian_dist(x, y, z, x + i, y + j, z + k);
+
+                if (dist > radius) {
+                    continue;
+                }
+
+                chunk_place_block(
+                    chunk, width, height, depth,
+                    x + i, y + j, z + k, block);
             }
         }
     }
+
     return chunk;
 }

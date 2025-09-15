@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define LENGTH_D 18
+#define LEN_DIFF_ARRAY_3D 6
+#define LEN_DIFF_ARRAY_XZ 4
 
 
 void wrapper(char*** chunk, int width, int height, int depth,
@@ -63,18 +64,18 @@ char*** chunk_shell(
 
 
 void fill_algorithm_xOz(char*** chunk, int width, int height, int depth,
-    int x, int y, int z, int target_block, int new_block) {
+    int x, int y, int z, char target_block, char new_block) {
     if (!is_inside(width, height, depth, x, y, z))
         return;
-    
+
     if (chunk[x][y][z] != target_block)
         return;
     chunk[x][y][z] = new_block;
-    
+
     int dx[] = {0, 0, -1, 1};
     int dz[] = {-1, 1, 0, 0};
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < LEN_DIFF_ARRAY_XZ; i++) {
         fill_algorithm_xOz(chunk, width, height, depth,
             x+dx[i], y, z+dz[i], target_block, new_block);
     }
@@ -86,26 +87,26 @@ char*** chunk_fill_xz(
     int x, int y, int z, char block) {
     if (!is_inside(width, height, depth, x, y, z))
         return chunk;
-    
+
     fill_algorithm_xOz(chunk, width, height, depth, x, y, z, chunk[x][y][z], block);
     return chunk;
 }
 
 
 void fill_algorithm_3D(char*** chunk, int width, int height, int depth,
-    int x, int y, int z, int target_block, int new_block) {
+    int x, int y, int z, char target_block, char new_block) {
     if (!is_inside(width, height, depth, x, y, z))
         return;
-    
+
     if (chunk[x][y][z] != target_block)
         return;
     chunk[x][y][z] = new_block;
-    
+
     int dx[] = {0, 0, 0, 0, -1, 1};
     int dy[] = {0, 0, -1, 1, 0, 0};
     int dz[] = {-1, 1, 0, 0, 0, 0};
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < LEN_DIFF_ARRAY_3D; i++) {
         fill_algorithm_3D(chunk, width, height, depth,
             x+dx[i], y+dy[i], z+dz[i], target_block, new_block);
     }
