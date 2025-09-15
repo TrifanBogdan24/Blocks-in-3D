@@ -1,4 +1,5 @@
 .venv/
 tests-out/*
+images/*
 *.o$
 *.a$

@@ -6,6 +6,9 @@
 #define BLOCK_WOOD      2
 #define BLOCK_STONE     3
 
+int is_inside(int width, int height, int depth,
+    int x, int y, int z);
+
 // Partea A
 
 char*** chunk_place_block(
