@@ -1,4 +1,5 @@
 #include "chunk.h"
+#include <stdlib.h>
 
 char*** chunk_rotate_y(char*** chunk, int width, int height, int depth) {
     char ***tmp = (char ***) malloc(depth * sizeof(char **));
