@@ -1,9 +1,6 @@
 #include <math.h>
 #include "chunk.h"
 
-#define MIN(x, y) ((x) < (y) ? (x) : (y))
-#define MAX(x, y) ((x) > (y) ? (x) : (y))
-
 #define SQUARE (double) 2.0
 
 

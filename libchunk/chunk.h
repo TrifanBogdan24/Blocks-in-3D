@@ -6,6 +6,12 @@
 #define BLOCK_WOOD      2
 #define BLOCK_STONE     3
 
+
+// Helper macro (functions):
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
+#define MAX(x, y) ((x) > (y) ? (x) : (y))
+
+// Helper function:
 int is_inside(int width, int height, int depth,
     int x, int y, int z);
 

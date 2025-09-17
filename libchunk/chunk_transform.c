@@ -1,5 +1,6 @@
 #include "chunk.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 #define LEN_DIFF_ARRAY_3D 6
 
@@ -26,10 +27,8 @@ char*** chunk_rotate_y(char*** chunk, int width, int height, int depth) {
             }
         }
     }
-
     return tmp;
 }
-
 
 
 void fill_corp_with_air(
@@ -46,7 +45,6 @@ void fill_corp_with_air(
         return;
 
     chunk[x][y][z] = BLOCK_AIR;
-    
 
     corp->num_points++;
     corp->points = realloc(corp->points, corp->num_points * sizeof(Point));
@@ -65,7 +63,6 @@ void fill_corp_with_air(
 }
 
 
-
 Corp *get_corps(char*** chunk, int width, int height, int depth, int* num_corps) {
     Corp *corps = NULL;
     (*num_corps) = 0;
@@ -79,7 +76,7 @@ Corp *get_corps(char*** chunk, int width, int height, int depth, int* num_corps)
                 corp.num_points = 0;
                 corp.points = NULL;
                 corp.block = chunk[x][y][z];
-                fill_corp_with_air(chunk, width, height, depth,x, y, z, &corp, chunk[x][y][z]);
+                fill_corp_with_air(chunk, width, height, depth, x, y, z, &corp, chunk[x][y][z]);
 
                 (*num_corps) += 1;
                 corps = realloc(corps, (*num_corps) * sizeof(Corp));
@@ -87,24 +84,24 @@ Corp *get_corps(char*** chunk, int width, int height, int depth, int* num_corps)
             }
         }
     }
-
     return corps;
 }
 
 
-void place_corp(char*** chunk, Corp *corp, char block) {
+void place_corp(char*** chunk, Corp *corp) {
     for (int i = 0; i < corp->num_points; i++) {
         int x = corp->points[i].x;
         int y = corp->points[i].y;
         int z = corp->points[i].z;
-        chunk[x][y][z] = block;
+        chunk[x][y][z] = corp->block;
     }
 }
 
 
-int compute_fall_distance(Corp *corp, char*** chunk, int width, int height, int depth) {
-    int max_fall = height; // mai mare decât orice posibil
-    
+// compute fall distance for a corp in presence of all other corps
+int compute_fall_distance_global(Corp *corp, Corp *corps, int num_corps, int width, int height, int depth) {
+    int min_fall = height;
+
     for (int i = 0; i < corp->num_points; i++) {
         int x = corp->points[i].x;
         int y = corp->points[i].y;
@@ -112,69 +109,82 @@ int compute_fall_distance(Corp *corp, char*** chunk, int width, int height, int 
 
         int dist = 0;
         int yy = y - 1;
-        while (yy >= 0 && chunk[x][yy][z] == BLOCK_AIR) {
+        while (yy >= 0) {
+            int occupied = 0;
+
+            // check if another corp has a block at (x, yy, z)
+            for (int c = 0; c < num_corps && !occupied; c++) {
+                Corp *other = &corps[c];
+                if (other == corp) continue;
+                for (int p = 0; p < other->num_points; p++) {
+                    if (other->points[p].x == x &&
+                        other->points[p].y == yy &&
+                        other->points[p].z == z) {
+                        occupied = 1;
+                        break;
+                    }
+                }
+            }
+
+            if (occupied) break;
+
             dist++;
             yy--;
         }
-        if (dist < max_fall)
-            max_fall = dist;
+
+        if (dist < min_fall)
+            min_fall = dist;
     }
-    return max_fall;
+
+    return min_fall;
 }
 
 
-int corp_min_y(Corp *corp) {
-    int m = corp->points[0].y;
-    for (int i = 1; i < corp->num_points; i++) {
-        if (corp->points[i].y < m)
-            m = corp->points[i].y;
-    }
-    return m;
+int is_plan_filled_with_air(char*** chunk, int width, int height, int depth, int y) {
+    if (y < 0 || y >= height) return;
+    for (int x = 0; x < width; x++)
+        for (int z = 0; z < depth; z++)
+            if (chunk[x][y][z] != BLOCK_AIR)
+                return 0;
+    return 1;
 }
 
-int cmp_corps(const void *a, const void *b) {
-    const Corp *ca = (const Corp*)a;
-    const Corp *cb = (const Corp*)b;
-    return corp_min_y((Corp*)a) - corp_min_y((Corp*)b);
-}
 
 char*** chunk_apply_gravity(
     char*** chunk, int width, int height, int depth, int* new_height) {
-    
+
     int num_corps = 0;
     Corp *corps = get_corps(chunk, width, height, depth, &num_corps);
-    qsort(corps, num_corps, sizeof(Corp), cmp_corps);
 
+    // compute fall distances for all corps simultaneously
+    int *falls = (int*) malloc(num_corps * sizeof(int));
     for (int c = 0; c < num_corps; c++) {
-        Corp *corp = &corps[c];
-
-        // află tipul de bloc (toate punctele corpului au fost aer acum!)
-        char block_type = corp->block; // trebuie salvat în struct când scoți corpul
-
-        int fall = compute_fall_distance(corp, chunk, width, height, depth);
-
-        for (int i = 0; i < corp->num_points; i++) {
-            corp->points[i].y -= fall;
-        }
-
-        place_corp(chunk, corp, block_type);
+        falls[c] = compute_fall_distance_global(&corps[c], corps, num_corps, width, height, depth);
     }
 
-    // elimină straturile goale de sus
-    int top = height - 1;
-    while (top >= 0) {
-        int empty = 1;
-        for (int x = 0; x < width && empty; x++) {
-            for (int z = 0; z < depth && empty; z++) {
-                if (chunk[x][top][z] != BLOCK_AIR)
-                    empty = 0;
-            }
+    // apply fall distances
+    for (int c = 0; c < num_corps; c++) {
+        for (int i = 0; i < corps[c].num_points; i++) {
+            corps[c].points[i].y -= falls[c];
         }
-        if (!empty) break;
-        top--;
     }
 
-    *new_height = top + 1; // noua înălțime
+    // clear chunk
+    for (int x = 0; x < width; x++)
+        for (int y = 0; y < height; y++)
+            for (int z = 0; z < depth; z++)
+                chunk[x][y][z] = BLOCK_AIR;
+
+    // place all corps back
+    for (int c = 0; c < num_corps; c++) {
+        place_corp(chunk, &corps[c]);
+    }
+
+    // compute new height
+    *new_height = height - 1;
+    while (is_plan_filled_with_air(chunk, width, height, depth, *new_height))
+        (*new_height) -= 1;
+    (*new_height) += 1;
+    free(falls);
     return chunk;
 }
-

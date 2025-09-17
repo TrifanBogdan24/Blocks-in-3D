@@ -16,6 +16,8 @@ void print_chunk(char*** chunk, int width, int height, int depth) {
     }
 }
 
+
+
 char*** read_chunk(int* width, int* height, int* depth) {
     scanf("%d%d%d", width, height, depth);
     
@@ -39,7 +41,9 @@ int main(void) {
     char*** chunk = read_chunk(&width, &height, &depth);
 
     // Procesare chunk
-
-    print_chunk(chunk, width, height, depth);
+    int length = 0;
+    unsigned char *bytes = chunk_encode(chunk, width, height, depth, &length);
+    fwrite(bytes, length, 1, stdout);
+    free(bytes);
     return 0;
 }
