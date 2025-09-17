@@ -1,5 +1,6 @@
 .venv/
 tests-out/*
 images/*
-*.o$
-*.a$
+*.o
+*.a
+build/main
