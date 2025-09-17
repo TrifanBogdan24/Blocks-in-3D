@@ -17,6 +17,10 @@
 
 #define MAX_NUM_OCCURRENCES 4095
 
+typedef struct {
+    int num_occurrences;
+    char block;
+} Pair;
 
 void print_byte(unsigned char byte) {
     for (int i = B7; i >= 0; i--)
@@ -37,10 +41,7 @@ char *flatten(char*** chunk, int width, int height, int depth, int *length) {
     return array;
 }
 
-typedef struct {
-    int num_occurrences;
-    char block;
-} Pair;
+
 
 Pair *get_pairs(char *array, int length, int *num_pairs) {
     (*num_pairs) = 0;
