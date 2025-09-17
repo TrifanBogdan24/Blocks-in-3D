@@ -15,6 +15,7 @@
 #define B10 10
 #define B11 11
 
+#define MAX_NUM_OCCURRENCES 4095
 
 
 void print_byte(unsigned char byte) {
@@ -54,7 +55,7 @@ Pair *get_pairs(char *array, int length, int *num_pairs) {
             idx++;
             num_occurrences++;
 
-            if (num_occurrences == 4095) {
+            if (num_occurrences == MAX_NUM_OCCURRENCES) {
                 (*num_pairs)++;
                 pairs = realloc(pairs, (*num_pairs) * sizeof(Pair));
                 pairs[(*num_pairs) - 1].block = block;
@@ -96,7 +97,7 @@ void add_pair_to_bytes(unsigned char **bytes, int *length,
         (*bytes)[*length - 1] |= (1 << B6);
     }
 
-    if (num_occurrences < 32) {
+    if (num_occurrences < (1 << B5)) {
         // bb0nnnnn
         if (num_occurrences & (1 << B4)) (*bytes)[*length - 1] |= (1 << B4);
         if (num_occurrences & (1 << B3)) (*bytes)[*length - 1] |= (1 << B3);
@@ -150,16 +151,6 @@ unsigned char* chunk_encode(
     return bytes;
 }
 
-void print_chunk_xz_planes(char ***chunk, int width, int height, int depth) {
-    for (int y = 0; y < height; y++) {
-        for (int z = 0; z < depth; z++) {
-            for (int x = 0; x < width; x++)
-                printf("%d ", chunk[x][y][z]);
-            printf("\n");
-        }
-        printf("\n");
-    }
-}
 
 
 char*** chunk_decode(
@@ -249,8 +240,6 @@ char*** chunk_decode(
                 return chunk;
             }
         }
-
     }
     return chunk;
 }
-

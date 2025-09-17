@@ -53,12 +53,11 @@ void fill_corp_with_air(
     corp->points[idx].y = y;
     corp->points[idx].z = z;
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < LEN_DIFF_ARRAY_3D; i++) {
         fill_corp_with_air(
             chunk, width, height, depth,
             x + dx[i], y + dy[i], z + dz[i],
-            corp, target
-        );
+            corp, target);
     }
 }
 
@@ -141,7 +140,7 @@ int compute_fall_distance_global(Corp *corp, Corp *corps, int num_corps, int wid
 
 
 int is_plan_filled_with_air(char*** chunk, int width, int height, int depth, int y) {
-    if (y < 0 || y >= height) return;
+    if (y < 0 || y >= height) return 0;
     for (int x = 0; x < width; x++)
         for (int z = 0; z < depth; z++)
             if (chunk[x][y][z] != BLOCK_AIR)
