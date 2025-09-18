@@ -15,17 +15,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
     
-      - name: Install dependencies
+      - name: 📥 Install dependencies
         run: |
             chmod +x setup.sh
             sudo ./setup.sh
 
-      - name: Run tests
+      - name: ✅ Run tests
         run: |
             chmod +x check.sh
             ./check.sh 2>&1 | tee tests_results.txt
       
-      - name: Upload test logs as artifacts
+      - name: 🖼️ Generate Images
+        run: |
+          chmod +x image-generator.sh
+          ./image-generator.sh --all
+
+      - name: 💾 Upload test logs as artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -34,4 +39,5 @@ jobs:
             tests_results.txt
             # Without `*` globbing, folders files will not be uploaded
             tests-out/*
+            images/*
           retention-days: 7
