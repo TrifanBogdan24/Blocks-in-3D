@@ -1,5 +1,8 @@
 #!/bin/bash
 
+MIN_TASK_IDX=1
+MAX_TASK_IDX=8
+
 function generate_task_images() {
     task_idx=$1
 
@@ -36,7 +39,7 @@ function generate_all_images() {
 
     # Loop over each task index
     local idx
-    for (( idx=1; idx<=num_tasks; idx++ )); do
+    for (( idx=$MIN_TASK_IDX; idx<=$MAX_TASK_IDX; idx++ )); do
         generate_task_images $idx
     done
 }
@@ -51,7 +54,11 @@ case "$1" in
         generate_all_images
         ;;
     -t|--task)
-        if [[ -n "$2" && "$2" =~ ^[0-9]+$ ]]; then
+        if [[ -n "$2" && "$2" =~ ^[0-9]+$ ]] ; then
+            if [[ "$2" -lt $MIN_TASK_IDX || "$2" -gt $MIN_TASK_IDX ]] ; then
+                echo "Invalid task index $2 to generate images for." >&2
+                exit 255
+            fi
             generate_task_images "$2"
         else
             echo "Error: '-t'/'--task' requires a numeric argument." >&2
