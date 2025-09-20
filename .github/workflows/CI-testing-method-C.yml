@@ -29,6 +29,8 @@ jobs:
             ./check.sh 2>&1 | tee tests_results.txt
       
       - name: 🖼️ Generate Images
+        # Run commands from repo's root
+        working-directory: ./
         run: |
           chmod +x image-generator.sh
           ./image-generator.sh -c --all
