@@ -1,4 +1,4 @@
-name: Run Tests on Implementation
+name: Run Tests on Implementation in 🇨
 
 on:
     push:
@@ -6,6 +6,9 @@ on:
     pull_request:
         branches: main
 
+defaults:
+  run:
+    working-directory: ./method-C
 
 jobs:
   test:
@@ -28,7 +31,7 @@ jobs:
       - name: 🖼️ Generate Images
         run: |
           chmod +x image-generator.sh
-          ./image-generator.sh --all
+          ./image-generator.sh -c --all
 
       - name: 💾 Upload test logs as artifacts
         if: always()
@@ -36,7 +39,7 @@ jobs:
         with:
           name: checker-logs
           path: |
-            tests_results.txt
+            ./method-C/tests_results.txt
             # Without `*` globbing, folders files will not be uploaded
             tests-out/*
             images/*

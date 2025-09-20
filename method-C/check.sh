@@ -9,8 +9,8 @@ function init {
     pad=$(printf '%.1s' "."{1..70})
     padlength=71
 
-    TESTS_OUT=tests-out
-    TESTS=tests
+    TESTS_OUT=../tests-out
+    TESTS=../tests
     NUM_TASKS_7_TO_10=0
 
     # Cleanup the previous run's temporary files
@@ -32,14 +32,14 @@ function check_homework {
 
     echo "................................TASK $task_num................................."
 
-    mkdir -p ${TESTS_OUT}/$1
+    mkdir -p "${TESTS_OUT}/method-C/$1" 
 
     for (( i = 0; i < $3; ++i))
     do
         in_file="${TESTS}/input/$1/$i.in"
         ref_file="${TESTS}/ref_output/$1/$i.ref"
         params_file="${TESTS}/params/$1/$i.param"
-        out_file="${TESTS_OUT}/$1/$i.out"
+        out_file="${TESTS_OUT}/method-C/$1/$i.out"
 
         test_id=$i
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+METHOD=""   # "C"/"rs"
+
 MIN_TASK_IDX=1
 MAX_TASK_IDX=8
 
@@ -24,7 +26,7 @@ function generate_task_images() {
             ./view3d.sh tests/ref_output/task$task_idx/$idx.ref -o images/task$task_idx/$idx-ref.png
         fi
 
-        ./view3d.sh tests-out/task$task_idx/$idx.out -o images/task$task_idx/$idx-out.png
+        ./view3d.sh tests-out/$METHOD/task$task_idx/$idx.out -o images/task$task_idx/$idx-out-$METHOD.png
     done
 }
 
@@ -44,31 +46,52 @@ function generate_all_images() {
     done
 }
 
+
 if [[ $# -eq 0 ]]; then
-    echo "Error: No arguments provided." >&2
+    echo "[ERROR] No arguments provided." >&2
     exit 255
 fi
 
+
+if [[ $# -ne 2 && $# -ne 3 ]] ; then
+    echo "[ERROR] Script was called with invalid number of arguments!" >&2
+    echo "[INFO]  Template to call script"
+    echo "        $0 <-c/-rs> <-a/--all>"
+    echo "        $0 <-c/-rs> <-t/-task> 1"
+fi
+
+
 case "$1" in
-    -a|--all)
-        generate_all_images
+    -rs|--rust)
+        METHOD="method-rs"
         ;;
-    -t|--task)
-        if [[ -n "$2" && "$2" =~ ^[0-9]+$ ]] ; then
-            if [[ "$2" -lt $MIN_TASK_IDX || "$2" -gt $MIN_TASK_IDX ]] ; then
-                echo "Invalid task index $2 to generate images for." >&2
-                exit 255
-            fi
-            generate_task_images "$2"
-        else
-            echo "Error: '-t'/'--task' requires a numeric argument." >&2
-            exit 255
-        fi
+    -c)
+        METHOD="method-C"
         ;;
     *)
-        echo "Error: Invalid arguments." >&2
+        echo "[ERROR] Invalid method name" >&2
         exit 255
         ;;
 esac
 
-
+case "$2" in
+    -a|--all)
+        generate_all_images
+        ;;
+    -t|--task)
+        if [[ -n "$3" && "$3" =~ ^[0-9]+$ ]] ; then
+            if [[ "$3" -lt $MIN_TASK_IDX || "$3" -gt $MIN_TASK_IDX ]] ; then
+                echo "[ERROR] Invalid task index $3 to generate images for." >&2
+                exit 255
+            fi
+            generate_task_images "$3"
+        else
+            echo "[ERROR] '-t'/'--task' requires a numeric argument." >&2
+            exit 255
+        fi
+        ;;
+    *)
+        echo "[ERROR] Invalid arguments." >&2
+        exit 255
+        ;;
+esac

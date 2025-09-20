@@ -4,3 +4,4 @@ images/*
 *.o
 *.a
 build/main
+target/
