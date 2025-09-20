@@ -6,10 +6,6 @@ on:
     pull_request:
         branches: main
 
-defaults:
-  run:
-    working-directory: ./method-C
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -20,17 +16,19 @@ jobs:
     
       - name: 📥 Install dependencies
         run: |
-            chmod +x setup.sh
-            sudo ./setup.sh
+            chmod +x setup-py.sh
+            sudo ./setup-py.sh
+            chmod +x setup-C.sh
+            sudo ./setup-C.sh
 
       - name: ✅ Run tests
+        working-directory: ./method-C
         run: |
             chmod +x check.sh
             ./check.sh 2>&1 | tee tests_results.txt
+        
       
       - name: 🖼️ Generate Images
-        # Run commands from repo's root
-        working-directory: ./
         run: |
           chmod +x image-generator.sh
           ./image-generator.sh -c --all

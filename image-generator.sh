@@ -74,6 +74,9 @@ case "$1" in
         ;;
 esac
 
+
+
+
 case "$2" in
     -a|--all)
         generate_all_images

@@ -5,11 +5,6 @@ YELLOW="\033[1;33m"
 BLUE="\033[1;34m"
 RESET="\033[0m"
 
-echo -e "${GREEN}Installing clang...${RESET}"
-
-sudo apt-get update
-sudo apt-get install -y clang clang-tidy
-
 echo -e "${GREEN}Installing python, pip, tkinter...${RESET}"
 
 sudo apt-get install -y python3 python3-pip python3-tk
@@ -34,10 +29,6 @@ source .venv/bin/activate
 
 # Install dependencies
 python3 -m pip install -r scripts/requirements.txt
-
-echo -e "${GREEN}Installing cpplint...${RESET}"
-
-sudo apt-get install -y cpplint
 
 # Deactivate the virtual environment
 deactivate
