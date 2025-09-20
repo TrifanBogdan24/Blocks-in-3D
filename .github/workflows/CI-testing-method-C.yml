@@ -27,20 +27,28 @@ jobs:
             chmod +x check.sh
             ./check.sh 2>&1 | tee tests_results.txt
         
-      
       - name: 🖼️ Generate Images
         run: |
           chmod +x image-generator.sh
           ./image-generator.sh -c --all
+
+      - name: 📦 Prepare artifact directory
+        if: always()
+        run: |
+          mkdir -p upload/tests-out
+          cp ./method-C/tests_results.txt upload || echo "ERROR"
+          cp -r tests-out/method-C/* upload/tests-out || echo "ERROR"
+          cp -r images/ upload || echo "ERROR"
+          
+          # Rename file extension: "out-method-C.png" -> "out.png"
+          find . -type f -iname "*out-method-C.png" -exec bash -c 'for f; do mv "$f" "${f/out-method-C.png/out.png}"; done' _ {} + || echo "ERROR"
+
 
       - name: 💾 Upload test logs as artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: checker-logs
-          path: |
-            ./method-C/tests_results.txt
-            # Without `*` globbing, folders files will not be uploaded
-            tests-out/*
-            images/*
+          path: upload
+
           retention-days: 7
