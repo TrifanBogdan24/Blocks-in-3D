@@ -1,6 +1,6 @@
-use std::num;
-use crate::libchunk::chunk::*;
+use std::usize::MAX;
 
+use crate::libchunk::chunk::*;
 
 
 #[derive(Default)]
@@ -9,6 +9,10 @@ struct Run {
     block: u8
 }
 
+const B0: usize = 0;
+const B5: usize = 5;
+const B8: usize = 8;
+const B11: usize = 11;
 
 const IDX_BIT_B1: usize = 7;
 const IDX_BIT_B0: usize = 6;
@@ -24,12 +28,13 @@ fn flatten(
     height: usize,
     depth: usize,
 ) -> Vec<u8> {
-    let mut array = Vec::with_capacity(width * height * depth);
+    let mut array: Vec<u8> = vec![0; width * height * depth];
 
     for y in 0..height {
         for z in 0..depth {
             for x in 0..width {
-                array.push(chunk[x][y][z]);
+                let idx = y * (depth * width) + z * width + x;
+                array[idx] = chunk[x][y][z];
             }
         }
     }
@@ -40,31 +45,27 @@ fn flatten(
 fn get_runs(flat_chunk: &[u8]) -> Vec<Run> {
     let mut runs = Vec::<Run>::new();
     
-    let mut last_block = flat_chunk[0];
-    let mut num_occurrences: usize = 0;
-    let mut idx: usize = 1;
+    let mut idx = 0usize;
 
     while idx < flat_chunk.len() {
-        if last_block != flat_chunk[idx] {
-            runs.push(Run{num_occurrences: num_occurrences, block: last_block});
-            last_block = flat_chunk[idx];
-            num_occurrences = 1;
-            continue;
+        let block = flat_chunk[idx];
+        let mut num_occurrences = 0usize;
+
+        while idx < flat_chunk.len() && flat_chunk[idx] == block {
+            idx += 1;
+            num_occurrences += 1;
+
+            if num_occurrences == MAX_NUM_OCCURRENCES {
+                runs.push(Run{num_occurrences: MAX_NUM_OCCURRENCES, block: block});
+                num_occurrences = 0;
+            }
         }
 
-        num_occurrences += 1;
-
-        if num_occurrences == MAX_NUM_OCCURRENCES {
-            runs.push(Run{num_occurrences: MAX_NUM_OCCURRENCES, block: last_block});
-            num_occurrences = 0;
-        }
-
-        idx += 1;
+        if num_occurrences > 0 {
+            runs.push(Run{num_occurrences: num_occurrences, block: block});
+        } 
     }
 
-    if num_occurrences > 0 {
-        runs.push(Run{num_occurrences: num_occurrences, block: last_block});
-    }
 
     runs
 }
@@ -80,27 +81,31 @@ fn encode_run(bytes: &mut Vec<u8>, run: &Run) {
         _ => ()
     }
 
-    if run.num_occurrences < 32 {
-        for i in 0..=4 {
-            if run.num_occurrences & (1 << i) != 0 {
+    if run.num_occurrences < (1 << B5) {
+        // bb0nnnnn
+        for i in B0..B5 {
+            if run.num_occurrences & (1 << i) > 0 {
                 byte |= 1 << i;
             }
         }
-
         bytes.push(byte);
     } else {
+        // bb10nnnn nnnnnnnn
+        
+        byte |= 1 << B5;
+
         // Primul octet:
-        for i in 8..=11 {
-            if run.num_occurrences & (1 << i) != 0 {
-                byte |= 1 << (i - 8);
+        for i in B8..=B11 {
+            if run.num_occurrences & (1 << i) > 0 {
+                byte |= 1 << (i - B8);
             }
         }
-        bytes.push(byte);
+        bytes.push(byte.clone());
 
         // Al doilea octet:
         byte = 0u8;
-        for i in 0..=7 {
-            if run.num_occurrences & (1 << i) != 0 {
+        for i in B0..B8 {
+            if run.num_occurrences & (1 << i) > 0 {
                 byte |= 1 << i;
             }
         }
@@ -119,7 +124,8 @@ pub fn chunk_encode(
     let runs = get_runs(&flat_chunk);
 
     let mut bytes = Vec::<u8>::new();
-    let _ = runs.iter().for_each(|run| encode_run(&mut bytes, run));
+    runs.iter().for_each(|run| encode_run(&mut bytes, run));
+
     bytes
 }
 
