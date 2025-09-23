@@ -5,7 +5,7 @@ use std::fs::{self, File};
 use std::io::{BufRead, BufReader};
 
 use blocks_in_3D::chunk_io::*;
-use blocks_in_3D::libchunk::chunk::*;
+use blocks_in_3D::libchunk::chunk::{self, *};
 use blocks_in_3D::libchunk::chunk_gen::*;
 use blocks_in_3D::libchunk::chunk_transform::*;
 use blocks_in_3D::libchunk::chunk_process::*;
@@ -62,14 +62,14 @@ fn test_task1(#[case] idx: usize) {
     let file_ref: String = format!("../tests/ref_output/task1/{}.ref", idx);
 
     let (mut chunk, width, height, depth) = fread_chunk(&file_in);
-    let (x, y, z, block) = fread_basic_params(&file_params);
+    let (x, y, z, block) = fread_block_coordinates(&file_params);
     
     chunk_place_block(&mut chunk, width, height, depth, x, y, z, block);
     fwrite_chunk(&file_out, &chunk, width, height, depth);
 
     assert!(
         cmp_text_files(&file_out, &file_ref),
-        "{:?} output file and {:?} reference file are not the same",
+        "Files {:?} and {:?} are NOT the identical",
         file_out,
         file_ref
     )
@@ -110,7 +110,7 @@ fn test_task2(#[case] idx: usize) {
 
     assert!(
         cmp_text_files(&file_out, &file_ref),
-        "{:?} output file and {:?} reference file are not the same",
+        "Files {:?} and {:?} are NOT the identical",
         file_out,
         file_ref
     )
@@ -150,7 +150,7 @@ fn test_task3(#[case] idx: usize) {
 
     assert!(
         cmp_text_files(&file_out, &file_ref),
-        "{:?} output file and {:?} reference file are not the same",
+        "Files {:?} and {:?} are NOT the identical",
         file_out,
         file_ref
     )
@@ -187,7 +187,7 @@ fn test_task4(#[case] idx: usize) {
 
     assert!(
         cmp_text_files(&file_out, &file_ref),
-        "{:?} output file and {:?} reference file are not the same",
+        "Files {:?} and {:?} are NOT the identical",
         file_out,
         file_ref
     )
@@ -206,14 +206,14 @@ fn test_task5(#[case] idx: usize) {
     let file_ref: String = format!("../tests/ref_output/task5/{}.ref", idx);
 
     let (mut chunk, width, height, depth) = fread_chunk(&file_in);
-    let (x, y, z, block) = fread_basic_params(&file_params);
+    let (x, y, z, block) = fread_block_coordinates(&file_params);
     
     chunk_fill_xz(&mut chunk, width, height, depth, x, y, z, block);
     fwrite_chunk(&file_out, &chunk, width, height, depth);
 
     assert!(
         cmp_text_files(&file_out, &file_ref),
-        "{:?} output file and {:?} reference file are not the same",
+        "Files {:?} and {:?} are NOT the identical",
         file_out,
         file_ref
     )
@@ -233,14 +233,14 @@ fn test_task6(#[case] idx: usize) {
     let file_ref: String = format!("../tests/ref_output/task6/{}.ref", idx);
 
     let (mut chunk, width, height, depth) = fread_chunk(&file_in);
-    let (x, y, z, block) = fread_basic_params(&file_params);
+    let (x, y, z, block) = fread_block_coordinates(&file_params);
     
     chunk_fill(&mut chunk, width, height, depth, x, y, z, block);
     fwrite_chunk(&file_out, &chunk, width, height, depth);
 
     assert!(
         cmp_text_files(&file_out, &file_ref),
-        "{:?} output file and {:?} reference file are not the same",
+        "Files {:?} and {:?} are NOT the identical",
         file_out,
         file_ref
     )
@@ -264,7 +264,7 @@ fn test_task7(#[case] idx: usize) {
 
     assert!(
         cmp_text_files(&file_out, &file_ref),
-        "{:?} output file and {:?} reference file are not the same",
+        "Files {:?} and {:?} are NOT the identical",
         file_out,
         file_ref
     )
@@ -289,7 +289,34 @@ fn test_task9(#[case] idx: usize) {
 
     assert!(
         cmp_binary_files(&file_out, &file_ref),
-        "{:?} output file and {:?} reference file are not the same",
+        "Files {:?} and {:?} are NOT the identical",
+        file_out,
+        file_ref
+    )
+}
+
+#[rstest]
+#[case(0)]
+#[case(1)]
+#[case(2)]
+#[case(3)]
+#[case(4)]
+fn test_task10(#[case] idx: usize) {
+    let file_params: String = format!("../tests/params/task10/{}.param", idx);
+    let file_in: String = format!("../tests/input/task10/{}.in", idx);
+    let file_out: String = format!("../tests-out/method-rs/task10/{}.out", idx);
+    let file_ref: String = format!("../tests/ref_output/task10/{}.ref", idx);
+
+    let (width, height, depth) = fread_chunk_sizes(&file_params);
+    let code: Vec<u8> = fread_code(&file_in);
+
+    let chunk = chunk_decode(&code, width, height, depth);
+    fwrite_chunk(&file_out, &chunk, width, height, depth);
+
+
+    assert!(
+        cmp_text_files(&file_out, &file_ref),
+        "Files {:?} and {:?} are NOT the identical",
         file_out,
         file_ref
     )

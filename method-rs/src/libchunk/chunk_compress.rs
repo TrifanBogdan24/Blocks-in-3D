@@ -1,5 +1,4 @@
-use std::usize::MAX;
-
+use crate::libchunk::chunk::BLOCK_AIR;
 use crate::libchunk::chunk::*;
 
 
@@ -141,6 +140,71 @@ pub fn chunk_decode(
     width: usize,
     height: usize,
     depth: usize,
-) -> Vec<u8> {
-    todo!();
+) -> Vec<Vec<Vec<u8>>> {
+    let mut chunk: Vec<Vec<Vec<u8>>> = vec![vec![vec![BLOCK_AIR; depth]; height]; width];
+
+    let (mut x, mut y, mut z) = (0usize, 0usize, 0usize);
+    let mut idx: usize = 0;
+
+    while idx < code.len() {
+        let block: u8 = match (code[idx] & (1 << IDX_BIT_B1) > 0, code[idx] & (1 << IDX_BIT_B0) > 0)  {
+            (true, true) => BLOCK_STONE,  // b1b0 = 11
+            (true, false) => BLOCK_WOOD,  // b1b0 = 10
+            (false, true) => BLOCK_WOOD,  // b1b0 = 01
+            _ => BLOCK_AIR                // b1b0 = 00
+        };
+
+
+        let mut num_occurrences = 0usize;
+
+        if code[idx] & (1 << B5) == 0 {
+            // bb0nnnnn
+            for i in B0..B5 {
+                if code[idx] & (1 << i) > 0 {
+                    num_occurrences |= 1 << i;
+                }
+            }
+        } else {
+            // bb10nnnn nnnnnnnn
+
+            // Primul octet:
+            for i in B8..B11 {
+                if code[idx] & (1 << (i - B8)) > 0 {
+                    num_occurrences |= 1 << B8;
+                }
+            }
+
+            // Al doilea octet:
+            idx += 1;
+            for i in B0..B8 {
+                if code[idx] & (1 << i) > 0 {
+                    num_occurrences |= 1 << i;
+                }
+            }
+        }
+
+        idx += 1;
+
+
+        for i in 0..num_occurrences {
+            chunk[x][y][z] = block;
+
+            x += 1;
+            if x == width {
+                x = 0;
+                z += 1;
+            }
+
+            if z == depth {
+                z = 0;
+                z += 1;
+            }
+
+            if y == height {
+                return chunk;
+            }
+        }
+    }
+
+    chunk
 }

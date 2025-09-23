@@ -1,8 +1,10 @@
+use crate::libchunk::chunk::BLOCK_AIR;
+
 pub fn chunk_rotate_y(
     chunk: &mut Vec<Vec<Vec<u8>>>,
     width: &mut usize, height: &mut usize, depth: &mut usize
 ) {
-    let mut new_mat: Vec<Vec<Vec<u8>>> = vec![vec![vec![0; *width]; *height]; *depth];
+    let mut new_mat: Vec<Vec<Vec<u8>>> = vec![vec![vec![BLOCK_AIR; *width]; *height]; *depth];
 
     let new_width: usize = *depth;
     let new_depth: usize = *width;

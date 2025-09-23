@@ -78,7 +78,7 @@ pub fn fread_chunk(file_in: &str) -> (Vec<Vec<Vec<u8>>>, usize, usize, usize) {
 }
 
 
-pub fn fread_basic_params(file_params: &str) -> (usize, usize, usize, u8) {
+pub fn fread_block_coordinates(file_params: &str) -> (usize, usize, usize, u8) {
     let file = File::open(file_params).unwrap();
     let mut reader = BufReader::new(file);
 
@@ -88,14 +88,41 @@ pub fn fread_basic_params(file_params: &str) -> (usize, usize, usize, u8) {
     // Split line by whitespace
     let mut parts = line.trim().split_whitespace();
 
-    let x: usize = parts.next().expect("Missing x").parse().expect("Invalid x");
-    let y: usize = parts.next().expect("Missing y").parse().expect("Invalid y");
-    let z: usize = parts.next().expect("Missing z").parse().expect("Invalid z");
+    let x: usize = parts.next().expect("Missing x")
+        .parse().expect("Invalid x");
+    let y: usize = parts.next().expect("Missing y")
+        .parse().expect("Invalid y");
+    let z: usize = parts.next().expect("Missing z")
+        .parse().expect("Invalid z");
 
-    let block: u8 = parts.next().expect("Missing block").parse().expect("Invalid block");
+    let block: u8 = parts.next().expect("Missing block")
+        .parse().expect("Invalid block");
 
     (x, y, z, block)
 }
+
+
+pub fn fread_chunk_sizes(file_params: &str) -> (usize, usize, usize) {
+    let file = File::open(file_params).unwrap();
+    let mut reader = BufReader::new(file);
+
+    let mut line = String::new();
+    reader.read_line(&mut line).unwrap(); 
+
+    // Split line by whitespace
+    let mut parts = line.trim().split_whitespace();
+
+    let width: usize = parts.next().expect("Missing width")
+        .parse().expect("Invalid width");
+    let height: usize = parts.next().expect("Missing height")
+        .parse().expect("Invalid height");
+    let depth: usize = parts.next().expect("Missing depth")
+        .parse().expect("Invalid depth");
+
+
+    (width, height, depth)
+}
+
 
 fn create_file_out(file_out: &str) -> File {
     let path = Path::new(file_out);
@@ -141,4 +168,10 @@ pub fn fwrite_encode(
 ) {
     let mut file: File = create_file_out(file_out);
     file.write(&code).expect(&format!("Cannot write bytes in {}", file_out));
+}
+
+
+pub fn fread_code(file_in: &str) -> Vec<u8> {
+    return fs::read(file_in)
+        .expect(&format!("[ERROR] cannot read {:?} file", file_in));
 }
