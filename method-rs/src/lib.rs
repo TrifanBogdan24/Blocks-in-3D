@@ -5,3 +5,5 @@ pub mod libchunk {
     pub mod chunk_transform;
     pub mod chunk_compress;
 }
+
+pub mod chunk_io;
