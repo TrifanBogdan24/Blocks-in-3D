@@ -8,10 +8,10 @@ pub fn is_inside(
 
 
 pub fn chunk_place_block(
-    chunk: &mut Vec<Vec<Vec<char>>>,
+    chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
     x: usize, y: usize, z: usize,
-    block: char
+    block: u8
 ) {
     if !is_inside(width, height, depth, x as usize, y as usize, z as usize) {
         return;
@@ -38,11 +38,11 @@ fn max(a: usize, b: usize) -> usize {
 
 
 pub fn chunk_fill_cuboid(
-    chunk: &mut Vec<Vec<Vec<char>>>,
+    chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
     x0: usize, y0: usize, z0: usize,
     x1: usize, y1: usize, z1: usize,
-    block: char
+    block: u8
 ) {
     for x in min(x0, x1)..=max(x0, x1) {
         for y in min(y0, y1)..=max(y0, y1) {
@@ -64,10 +64,10 @@ fn euclidian_dist(
 }
 
 pub fn chunk_fill_sphere(
-    chunk: &mut Vec<Vec<Vec<char>>>,
+    chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
     x: usize, y: usize, z: usize,
-    radius: f32, block: char
+    radius: f32, block: u8
 ) {
     let r: usize = radius.ceil().abs() as usize;
 

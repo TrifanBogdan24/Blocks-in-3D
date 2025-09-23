@@ -1,17 +1,22 @@
 pub fn chunk_rotate_y(
-    chunk: &mut Vec<Vec<Vec<char>>>,
-    width: usize, height: usize, depth: usize
+    chunk: &mut Vec<Vec<Vec<u8>>>,
+    width: &mut usize, height: &mut usize, depth: &mut usize
 ) {
-    let mut new_mat: Vec<Vec<Vec<char>>> = vec![vec![vec![' '; width]; height]; depth];
+    let mut new_mat: Vec<Vec<Vec<u8>>> = vec![vec![vec![0; *width]; *height]; *depth];
 
-    for x in 0..depth {
-        for y in 0..height {
-            for z in 0..width {
-                new_mat[x][y][z] = chunk[z][y][depth - 1 - x];
+    let new_width: usize = *depth;
+    let new_depth: usize = *width;
+
+    for x in 0..new_width {
+        for y in 0..*height {
+            for z in 0..new_depth {
+                new_mat[x][y][z] = chunk[z][y][*depth - 1 - x];
             }
         }
     }
 
+    *width = new_width;
+    *depth = new_depth;
     *chunk = new_mat;
 }
 

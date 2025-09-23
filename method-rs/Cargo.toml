@@ -1,6 +1,7 @@
 [package]
-name = "method-rs"
+name = "blocks-in-3D"
 version = "0.1.0"
 edition = "2024"
 
-[dependencies]
+[dev-dependencies]
+rstest = "0.26.1"

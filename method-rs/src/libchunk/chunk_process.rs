@@ -1,10 +1,10 @@
 use crate::libchunk::chunk_gen::is_inside;
 
 fn wrapper(
-    chunk: &mut Vec<Vec<Vec<char>>>,
+    chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
     x: usize, y: usize, z: usize,
-    target_block: char, shell_block: char
+    target_block: u8, shell_block: u8
 ) {
     for i in -1..=1 {
         let px = (x as isize) + (i as isize);
@@ -48,9 +48,9 @@ fn wrapper(
 }
 
 pub fn chunk_shell(
-    chunk: &mut Vec<Vec<Vec<char>>>,
+    chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
-    target_block: char, shell_block: char
+    target_block: u8, shell_block: u8
 ) {
     let mut points_stack: Vec<Vec<usize>> = vec![];
 
@@ -82,10 +82,10 @@ pub fn chunk_shell(
 }
 
 fn fill_algorithm_x0z(
-    chunk: &mut Vec<Vec<Vec<char>>>,
+    chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
     x: usize, y: usize, z: usize,
-    target_block: char, new_block: char
+    target_block: u8, new_block: u8
 ) {
     if !is_inside(width, height, depth, x, y, z) {
         return;
@@ -115,10 +115,10 @@ fn fill_algorithm_x0z(
 
 
 pub fn chunk_fill_xz(
-    chunk: &mut Vec<Vec<Vec<char>>>,
+    chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
     x: usize, y: usize, z: usize,
-    block: char
+    block: u8
 ) {
     if !is_inside(width, height, depth, x as usize, y as usize, z as usize) {
         return;
@@ -129,10 +129,10 @@ pub fn chunk_fill_xz(
 
 
 fn fill_algorithm_3d(
-    chunk: &mut Vec<Vec<Vec<char>>>,
+    chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
     x: usize, y: usize, z: usize,
-    target_block: char, new_block: char
+    target_block: u8, new_block: u8
 ) {
     if !is_inside(width, height, depth, x, y, z) {
         return;
@@ -164,10 +164,10 @@ fn fill_algorithm_3d(
 
 
 pub fn chunk_fill(
-    chunk: &mut Vec<Vec<Vec<char>>>,
+    chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
     x: usize, y: usize, z: usize,
-    block: char
+    block: u8
 ) {
     if !is_inside(width, height, depth, x, y, z) {
         return;
