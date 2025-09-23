@@ -44,28 +44,35 @@ fn flatten(
 
 fn get_runs(flat_chunk: &[u8]) -> Vec<Run> {
     let mut runs = Vec::<Run>::new();
-    
-    let mut idx = 0usize;
 
-    while idx < flat_chunk.len() {
-        let block = flat_chunk[idx];
-        let mut num_occurrences = 0usize;
-
-        while idx < flat_chunk.len() && flat_chunk[idx] == block {
-            idx += 1;
-            num_occurrences += 1;
-
-            if num_occurrences == MAX_NUM_OCCURRENCES {
-                runs.push(Run{num_occurrences: MAX_NUM_OCCURRENCES, block: block});
-                num_occurrences = 0;
-            }
-        }
-
-        if num_occurrences > 0 {
-            runs.push(Run{num_occurrences: num_occurrences, block: block});
-        } 
+    if flat_chunk.len() == 0 {
+        return runs;
     }
 
+    let mut idx: usize = 1;
+    let mut num_occurrences: usize = 1;
+    let mut last_block = flat_chunk[0];
+
+    while idx < flat_chunk.len() {
+        if last_block != flat_chunk[idx] {
+            runs.push(Run{num_occurrences: num_occurrences, block: last_block});
+            last_block = flat_chunk[idx];
+            num_occurrences = 1;
+        } else {
+            num_occurrences += 1;
+        }
+
+        if num_occurrences == MAX_NUM_OCCURRENCES {
+            runs.push(Run{num_occurrences: MAX_NUM_OCCURRENCES, block: last_block});
+            num_occurrences = 0;
+        }
+
+        idx += 1;
+    }
+
+    if num_occurrences > 0 {
+        runs.push(Run{num_occurrences: num_occurrences, block: last_block});
+    } 
 
     runs
 }
