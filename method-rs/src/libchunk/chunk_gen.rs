@@ -2,22 +2,25 @@ use std::cmp::{min, max};
 
 pub fn is_inside(
     width: usize, height: usize, depth: usize,
-    x: usize, y: usize, z: usize
+    x: isize, y: isize, z: isize
 ) -> bool {
-    x < width && y < height && z < depth
+    0 <= x && x < (width as isize)
+    && 0 <= y && y < (height as isize)
+    && 0 <= z && z < (depth as isize)
+
 }
 
 
 pub fn chunk_place_block(
     chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
-    x: usize, y: usize, z: usize,
+    x: isize, y: isize, z: isize,
     block: u8
 ) {
-    if !is_inside(width, height, depth, x as usize, y as usize, z as usize) {
+    if !is_inside(width, height, depth, x, y, z) {
         return;
     }
-    chunk[x][y][z] = block;
+    chunk[x as usize][y as usize][z as usize] = block;
 }
 
 
@@ -30,13 +33,13 @@ pub fn chunk_fill_cuboid(
     x1: isize, y1: isize, z1: isize,
     block: u8
 ) {
-    let min_x = max(min(x0, x1), 0isize) as usize;
-    let min_y = max(min(y0, y1), 0isize) as usize;
-    let min_z = max(min(z0, z1), 0isize) as usize;
+    let min_x = max(min(x0, x1), 0isize);
+    let min_y = max(min(y0, y1), 0isize);
+    let min_z = max(min(z0, z1), 0isize);
 
-    let max_x = min(max(x0, x1), (width - 1) as isize) as usize;
-    let max_y = min(max(y0, y1), (height - 1) as isize) as usize;
-    let max_z = min(max(z0, z1), (depth - 1) as isize) as usize;
+    let max_x = min(max(x0, x1), (width - 1) as isize);
+    let max_y = min(max(y0, y1), (height - 1) as isize);
+    let max_z = min(max(z0, z1), (depth - 1) as isize);
 
     for x in min_x..=max_x {
         for y in min_y..=max_y {
@@ -60,11 +63,12 @@ fn euclidian_dist(
 pub fn chunk_fill_sphere(
     chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
-    x: usize, y: usize, z: usize,
+    x: isize, y: isize, z: isize,
     radius: f32, block: u8
 ) {
     let r: usize = radius.ceil().abs() as usize;
 
+    /* TODO: fix it!
     for i in 0..=(2*r) {
         if i >= x {
             continue;
@@ -88,4 +92,6 @@ pub fn chunk_fill_sphere(
             }
         }
     }
+    */
+
 }

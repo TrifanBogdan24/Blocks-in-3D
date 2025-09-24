@@ -78,7 +78,7 @@ pub fn fread_chunk(file_in: &str) -> (Vec<Vec<Vec<u8>>>, usize, usize, usize) {
 }
 
 
-pub fn fread_block_coordinates(file_params: &str) -> (usize, usize, usize, u8) {
+pub fn fread_block_coordinates(file_params: &str) -> (isize, isize, isize, u8) {
     let file = File::open(file_params).unwrap();
     let mut reader = BufReader::new(file);
 
@@ -88,11 +88,11 @@ pub fn fread_block_coordinates(file_params: &str) -> (usize, usize, usize, u8) {
     // Split line by whitespace
     let mut parts = line.trim().split_whitespace();
 
-    let x: usize = parts.next().expect("Missing x")
+    let x: isize = parts.next().expect("Missing x")
         .parse().expect("Invalid x");
-    let y: usize = parts.next().expect("Missing y")
+    let y: isize = parts.next().expect("Missing y")
         .parse().expect("Invalid y");
-    let z: usize = parts.next().expect("Missing z")
+    let z: isize = parts.next().expect("Missing z")
         .parse().expect("Invalid z");
 
     let block: u8 = parts.next().expect("Missing block")
