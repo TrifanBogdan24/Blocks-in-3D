@@ -185,7 +185,7 @@ pub fn chunk_decode(
 
         idx += 1;
 
-        for i in 0..num_occurrences {
+        for _ in 0..num_occurrences {
             chunk[x][y][z] = block;
 
             x += 1;

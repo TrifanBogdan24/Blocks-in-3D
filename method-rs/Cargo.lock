@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "blocks-in-3D"
+name = "blocks_in_3_d"
 version = "0.1.0"
 dependencies = [
  "rstest",

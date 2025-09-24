@@ -4,12 +4,11 @@ use rstest::rstest;
 use std::fs::{self, File};
 use std::io::{BufRead, BufReader};
 
-use blocks_in_3D::chunk_io::*;
-use blocks_in_3D::libchunk::chunk::{self, *};
-use blocks_in_3D::libchunk::chunk_gen::*;
-use blocks_in_3D::libchunk::chunk_transform::*;
-use blocks_in_3D::libchunk::chunk_process::*;
-use blocks_in_3D::libchunk::chunk_compress::*;
+use blocks_in_3_d::chunk_io::*;
+use blocks_in_3_d::libchunk::chunk_gen::*;
+use blocks_in_3_d::libchunk::chunk_transform::*;
+use blocks_in_3_d::libchunk::chunk_process::*;
+use blocks_in_3_d::libchunk::chunk_compress::*;
 
 
 
@@ -94,13 +93,13 @@ fn test_task2(#[case] idx: usize) {
     // Split line by whitespace
     let mut parts = line.trim().split_whitespace();
 
-    let x0: usize = parts.next().expect("Missing x0").parse().expect("Invalid x0");
-    let y0: usize = parts.next().expect("Missing y0").parse().expect("Invalid y0");
-    let z0: usize = parts.next().expect("Missing z0").parse().expect("Invalid z0");
+    let x0: isize = parts.next().expect("Missing x0").parse().expect("Invalid x0");
+    let y0: isize = parts.next().expect("Missing y0").parse().expect("Invalid y0");
+    let z0: isize = parts.next().expect("Missing z0").parse().expect("Invalid z0");
 
-    let x1: usize = parts.next().expect("Missing x1").parse().expect("Invalid x1");
-    let y1: usize = parts.next().expect("Missing y1").parse().expect("Invalid y1");
-    let z1: usize = parts.next().expect("Missing z1").parse().expect("Invalid z1");
+    let x1: isize = parts.next().expect("Missing x1").parse().expect("Invalid x1");
+    let y1: isize = parts.next().expect("Missing y1").parse().expect("Invalid y1");
+    let z1: isize = parts.next().expect("Missing z1").parse().expect("Invalid z1");
 
     let block: u8 = parts.next().expect("Missing block").parse().expect("Invalid block");
 

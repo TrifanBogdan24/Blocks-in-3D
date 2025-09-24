@@ -1,3 +1,4 @@
+use std::cmp::{min, max};
 
 pub fn is_inside(
     width: usize, height: usize, depth: usize,
@@ -20,33 +21,26 @@ pub fn chunk_place_block(
 }
 
 
-fn min(a: usize, b: usize) -> usize {
-    if a < b {
-        a
-    } else {
-        b
-    }
-}
-
-fn max(a: usize, b: usize) -> usize {
-    if a > b {
-        a
-    } else {
-        b
-    }
-}
 
 
 pub fn chunk_fill_cuboid(
     chunk: &mut Vec<Vec<Vec<u8>>>,
     width: usize, height: usize, depth: usize,
-    x0: usize, y0: usize, z0: usize,
-    x1: usize, y1: usize, z1: usize,
+    x0: isize, y0: isize, z0: isize,
+    x1: isize, y1: isize, z1: isize,
     block: u8
 ) {
-    for x in min(x0, x1)..=max(x0, x1) {
-        for y in min(y0, y1)..=max(y0, y1) {
-            for z in min(z0, z1)..=max(z0, z1) {
+    let min_x = max(min(x0, x1), 0isize) as usize;
+    let min_y = max(min(y0, y1), 0isize) as usize;
+    let min_z = max(min(z0, z1), 0isize) as usize;
+
+    let max_x = min(max(x0, x1), (width - 1) as isize) as usize;
+    let max_y = min(max(y0, y1), (height - 1) as isize) as usize;
+    let max_z = min(max(z0, z1), (depth - 1) as isize) as usize;
+
+    for x in min_x..=max_x {
+        for y in min_y..=max_y {
+            for z in min_z..=max_z {
                 chunk_place_block(
                     chunk, width, height, depth, 
                     x, y, z, block);
