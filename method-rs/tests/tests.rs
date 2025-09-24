@@ -276,6 +276,30 @@ fn test_task7(#[case] idx: usize) {
 #[case(2)]
 #[case(3)]
 #[case(4)]
+#[case(5)]
+fn test_task8(#[case] idx: usize) {
+    let file_in: String = format!("../tests/input/task8/{}.in", idx);
+    let file_out: String = format!("../tests-out/method-rs/task8/{}.out", idx);
+    let file_ref: String = format!("../tests/ref_output/task8/{}.ref", idx);
+
+    let (mut chunk, mut width, mut height, mut depth) = fread_chunk(&file_in);
+    chunk_apply_gravity(&mut chunk, &mut width, &mut height, &mut depth);
+    fwrite_chunk(&file_out, &chunk, width, height, depth);
+
+    assert!(
+        cmp_text_files(&file_out, &file_ref),
+        "Files {:?} and {:?} are NOT the identical",
+        file_out,
+        file_ref
+    )
+}
+
+#[rstest]
+#[case(0)]
+#[case(1)]
+#[case(2)]
+#[case(3)]
+#[case(4)]
 fn test_task9(#[case] idx: usize) {
     let file_in: String = format!("../tests/input/task9/{}.in", idx);
     let file_out: String = format!("../tests-out/method-rs/task9/{}.out", idx);

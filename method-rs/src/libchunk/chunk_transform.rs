@@ -22,3 +22,9 @@ pub fn chunk_rotate_y(
     *chunk = new_mat;
 }
 
+pub fn chunk_apply_gravity(
+    _chunk: &mut Vec<Vec<Vec<u8>>>,
+    _width: &mut usize, _height: &mut usize, _depth: &mut usize
+) {
+    todo!("task 8");
+}
