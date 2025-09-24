@@ -150,7 +150,7 @@ pub fn chunk_decode(
         let block: u8 = match (code[idx] & (1 << IDX_BIT_B1) > 0, code[idx] & (1 << IDX_BIT_B0) > 0)  {
             (true, true) => BLOCK_STONE,  // b1b0 = 11
             (true, false) => BLOCK_WOOD,  // b1b0 = 10
-            (false, true) => BLOCK_WOOD,  // b1b0 = 01
+            (false, true) => BLOCK_GRASS, // b1b0 = 01
             _ => BLOCK_AIR                // b1b0 = 00
         };
 
@@ -185,22 +185,25 @@ pub fn chunk_decode(
 
         idx += 1;
 
-
         for i in 0..num_occurrences {
             chunk[x][y][z] = block;
 
             x += 1;
-            if x == width {
-                x = 0;
-                z += 1;
+            if x < width {
+                continue;
             }
 
-            if z == depth {
-                z = 0;
-                z += 1;
+            x = 0;
+            z += 1;
+
+            if z < depth {
+                continue;
             }
 
-            if y == height {
+            z = 0;
+            y += 1;
+
+            if y >= height {
                 return chunk;
             }
         }
