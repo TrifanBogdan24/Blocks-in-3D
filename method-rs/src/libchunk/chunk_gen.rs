@@ -54,10 +54,14 @@ pub fn chunk_fill_cuboid(
 
 
 fn euclidian_dist(
-    x0: usize, y0: usize, z0: usize,
-    x1: usize, y1: usize, z1: usize
+    x0: isize, y0: isize, z0: isize,
+    x1: isize, y1: isize, z1: isize
 ) -> f32 {
-    ((x0 - x1).pow(2) as f32 + (y0 - y1).pow(2) as f32 + (z0 - z1).pow(2) as f32).sqrt()
+    (
+        (x0 - x1).pow(2) as f32
+        + (y0 - y1).pow(2) as f32
+        + (z0 - z1).pow(2) as f32
+    ).sqrt()
 }
 
 pub fn chunk_fill_sphere(
@@ -66,32 +70,19 @@ pub fn chunk_fill_sphere(
     x: isize, y: isize, z: isize,
     radius: f32, block: u8
 ) {
-    let r: usize = radius.ceil().abs() as usize;
+    let r = radius.ceil().abs() as isize;
 
-    /* TODO: fix it!
-    for i in 0..=(2*r) {
-        if i >= x {
-            continue;
-        }
-        for j in 0..=(2*r) {
-            if j >= y {
-                continue;
-            }
-            for k in 0..=(2*r) {
-                if k >= z {
-                    continue;
-                }
-                let dist: f32 = euclidian_dist(x, y, z, x + i, y as usize + j, z as usize + k);
+    for i in -r..=r {
+        for j in -r..=r {
+            for k in -r..=r {
+                let dist: f32 = euclidian_dist(x, y, z, x + i, y + j, z + k);
 
                 if dist > radius {
                     continue;
                 }
 
                 chunk_place_block(chunk, width, height, depth, x + i, y + j, z + k, block);
-
             }
         }
     }
-    */
-
 }

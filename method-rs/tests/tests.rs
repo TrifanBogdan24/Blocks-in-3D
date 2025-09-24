@@ -135,9 +135,9 @@ fn test_task3(#[case] idx: usize) {
     // Split line by whitespace
     let mut parts = line.trim().split_whitespace();
 
-    let x: usize = parts.next().expect("Missing x").parse().expect("Invalid x");
-    let y: usize = parts.next().expect("Missing y").parse().expect("Invalid y");
-    let z: usize = parts.next().expect("Missing z").parse().expect("Invalid z");
+    let x: isize = parts.next().expect("Missing x").parse().expect("Invalid x");
+    let y: isize = parts.next().expect("Missing y").parse().expect("Invalid y");
+    let z: isize = parts.next().expect("Missing z").parse().expect("Invalid z");
 
     let radius: f32 = parts.next().expect("Missing radius").parse().expect("Invalid radius");
     let block: u8 = parts.next().expect("Missing block").parse().expect("Invalid block");
