@@ -3,8 +3,11 @@ name: Run Tests on Implementation in 🇨
 on:
     push:
         branches: main
+        paths: ["method-C/**", "tests/**", "scripts/**", ".github/workflows/**"]
     pull_request:
         branches: main
+        paths: ["method-C/**", "tests/**", "scripts/**", ".github/workflows/**"]
+
 
 jobs:
   test:
