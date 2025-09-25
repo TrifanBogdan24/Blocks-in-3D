@@ -2,9 +2,14 @@ use crate::libchunk::chunk_gen::is_inside;
 
 fn wrapper(
     chunk: &mut Vec<Vec<Vec<u8>>>,
-    width: usize, height: usize, depth: usize,
-    x: usize, y: usize, z: usize,
-    target_block: u8, shell_block: u8
+    width: usize,
+    height: usize,
+    depth: usize,
+    x: usize,
+    y: usize,
+    z: usize,
+    target_block: u8,
+    shell_block: u8,
 ) {
     for i in -1..=1 {
         let px = (x as isize) + (i as isize);
@@ -30,7 +35,6 @@ fn wrapper(
                     continue;
                 }
 
-
                 if !is_inside(width, height, depth, px, py, pz) {
                     continue;
                 }
@@ -50,8 +54,11 @@ fn wrapper(
 
 pub fn chunk_shell(
     chunk: &mut Vec<Vec<Vec<u8>>>,
-    width: usize, height: usize, depth: usize,
-    target_block: u8, shell_block: u8
+    width: usize,
+    height: usize,
+    depth: usize,
+    target_block: u8,
+    shell_block: u8,
 ) {
     let mut points_stack: Vec<Vec<usize>> = vec![];
 
@@ -62,10 +69,7 @@ pub fn chunk_shell(
                     continue;
                 }
 
-                points_stack.push(
-                    vec![x, y, z]
-                );
-
+                points_stack.push(vec![x, y, z]);
             }
         }
     }
@@ -76,17 +80,30 @@ pub fn chunk_shell(
         let py = pct[1];
         let pz = pct[2];
 
-        wrapper(chunk, width, height, depth,
-            px, py, pz,
-            target_block, shell_block);
+        wrapper(
+            chunk,
+            width,
+            height,
+            depth,
+            px,
+            py,
+            pz,
+            target_block,
+            shell_block,
+        );
     }
 }
 
 fn fill_algorithm_x0z(
     chunk: &mut Vec<Vec<Vec<u8>>>,
-    width: usize, height: usize, depth: usize,
-    x: isize, y: isize, z: isize,
-    target_block: u8, new_block: u8
+    width: usize,
+    height: usize,
+    depth: usize,
+    x: isize,
+    y: isize,
+    z: isize,
+    target_block: u8,
+    new_block: u8,
 ) {
     if !is_inside(width, height, depth, x as isize, y as isize, z as isize) {
         return;
@@ -108,32 +125,57 @@ fn fill_algorithm_x0z(
             continue;
         }
 
-        fill_algorithm_x0z(chunk, width, height, depth,
-            nx, y, nz,            
-            target_block, new_block);
+        fill_algorithm_x0z(
+            chunk,
+            width,
+            height,
+            depth,
+            nx,
+            y,
+            nz,
+            target_block,
+            new_block,
+        );
     }
 }
 
-
 pub fn chunk_fill_xz(
     chunk: &mut Vec<Vec<Vec<u8>>>,
-    width: usize, height: usize, depth: usize,
-    x: isize, y: isize, z: isize,
-    block: u8
+    width: usize,
+    height: usize,
+    depth: usize,
+    x: isize,
+    y: isize,
+    z: isize,
+    block: u8,
 ) {
     if !is_inside(width, height, depth, x, y, z) {
         return;
     }
 
-    fill_algorithm_x0z(chunk, width, height, depth, x, y, z, chunk[x as usize][y as usize][z as usize], block);
+    fill_algorithm_x0z(
+        chunk,
+        width,
+        height,
+        depth,
+        x,
+        y,
+        z,
+        chunk[x as usize][y as usize][z as usize],
+        block,
+    );
 }
-
 
 fn fill_algorithm_3d(
     chunk: &mut Vec<Vec<Vec<u8>>>,
-    width: usize, height: usize, depth: usize,
-    x: isize, y: isize, z: isize,
-    target_block: u8, new_block: u8
+    width: usize,
+    height: usize,
+    depth: usize,
+    x: isize,
+    y: isize,
+    z: isize,
+    target_block: u8,
+    new_block: u8,
 ) {
     if !is_inside(width, height, depth, x, y, z) {
         return;
@@ -157,18 +199,29 @@ fn fill_algorithm_3d(
             continue;
         }
 
-        fill_algorithm_3d(chunk, width, height, depth,
-            nx, ny, nz,
-            target_block, new_block);
+        fill_algorithm_3d(
+            chunk,
+            width,
+            height,
+            depth,
+            nx,
+            ny,
+            nz,
+            target_block,
+            new_block,
+        );
     }
 }
 
-
 pub fn chunk_fill(
     chunk: &mut Vec<Vec<Vec<u8>>>,
-    width: usize, height: usize, depth: usize,
-    x: isize, y: isize, z: isize,
-    block: u8
+    width: usize,
+    height: usize,
+    depth: usize,
+    x: isize,
+    y: isize,
+    z: isize,
+    block: u8,
 ) {
     if !is_inside(width, height, depth, x as isize, y as isize, z as isize) {
         return;
@@ -178,8 +231,14 @@ pub fn chunk_fill(
     }
 
     fill_algorithm_3d(
-        chunk, width, height, depth,
-        x, y, z,
-        chunk[x as usize][y as usize][z as usize], block);
-
+        chunk,
+        width,
+        height,
+        depth,
+        x,
+        y,
+        z,
+        chunk[x as usize][y as usize][z as usize],
+        block,
+    );
 }
