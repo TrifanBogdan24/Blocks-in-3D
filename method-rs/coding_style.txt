@@ -1,0 +1,909 @@
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:2:
+ use std::io::{BufRead, BufReader, Write};
+ use std::path::Path;
+ 
+[31m-pub fn print_chunk(
+(B[m[31m-    chunk: &Vec<Vec<Vec<u8>>>,
+(B[m[31m-    width: usize,
+(B[m[31m-    height: usize,
+(B[m[31m-    depth: usize
+(B[m[31m-) {
+(B[m[32m+pub fn print_chunk(chunk: &Vec<Vec<Vec<u8>>>, width: usize, height: usize, depth: usize) {
+(B[m     for x in 0..width {
+         for y in (0..height).rev() {
+             for z in 0..depth {
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:18:
+     }
+ }
+ 
+[31m-
+(B[m pub fn fread_chunk(file_in: &str) -> (Vec<Vec<Vec<u8>>>, usize, usize, usize) {
+     // Read the whole file as a string
+[31m-    let input = fs::read_to_string(file_in)
+(B[m[31m-        .expect("Failed to read params file");
+(B[m[32m+    let input = fs::read_to_string(file_in).expect("Failed to read params file");
+(B[m 
+     let mut lines = input.lines();
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:77:
+     (chunk, width, height, depth)
+ }
+ 
+[31m-
+(B[m pub fn fread_block_coordinates(file_params: &str) -> (isize, isize, isize, u8) {
+     let file = File::open(file_params).unwrap();
+     let mut reader = BufReader::new(file);
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:84:
+ 
+     let mut line = String::new();
+[31m-    reader.read_line(&mut line).unwrap(); 
+(B[m[32m+    reader.read_line(&mut line).unwrap();
+(B[m 
+     // Split line by whitespace
+     let mut parts = line.trim().split_whitespace();
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:90:
+ 
+[31m-    let x: isize = parts.next().expect("Missing x")
+(B[m[31m-        .parse().expect("Invalid x");
+(B[m[31m-    let y: isize = parts.next().expect("Missing y")
+(B[m[31m-        .parse().expect("Invalid y");
+(B[m[31m-    let z: isize = parts.next().expect("Missing z")
+(B[m[31m-        .parse().expect("Invalid z");
+(B[m[32m+    let x: isize = parts.next().expect("Missing x").parse().expect("Invalid x");
+(B[m[32m+    let y: isize = parts.next().expect("Missing y").parse().expect("Invalid y");
+(B[m[32m+    let z: isize = parts.next().expect("Missing z").parse().expect("Invalid z");
+(B[m 
+[31m-    let block: u8 = parts.next().expect("Missing block")
+(B[m[31m-        .parse().expect("Invalid block");
+(B[m[32m+    let block: u8 = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing block")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid block");
+(B[m 
+     (x, y, z, block)
+ }
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:103:
+ 
+[31m-
+(B[m pub fn fread_chunk_sizes(file_params: &str) -> (usize, usize, usize) {
+     let file = File::open(file_params).unwrap();
+     let mut reader = BufReader::new(file);
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:108:
+ 
+     let mut line = String::new();
+[31m-    reader.read_line(&mut line).unwrap(); 
+(B[m[32m+    reader.read_line(&mut line).unwrap();
+(B[m 
+     // Split line by whitespace
+     let mut parts = line.trim().split_whitespace();
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:114:
+ 
+[31m-    let width: usize = parts.next().expect("Missing width")
+(B[m[31m-        .parse().expect("Invalid width");
+(B[m[31m-    let height: usize = parts.next().expect("Missing height")
+(B[m[31m-        .parse().expect("Invalid height");
+(B[m[31m-    let depth: usize = parts.next().expect("Missing depth")
+(B[m[31m-        .parse().expect("Invalid depth");
+(B[m[32m+    let width: usize = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing width")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid width");
+(B[m[32m+    let height: usize = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing height")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid height");
+(B[m[32m+    let depth: usize = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing depth")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid depth");
+(B[m 
+[31m-
+(B[m     (width, height, depth)
+ }
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:126:
+[31m-
+(B[m fn create_file_out(file_out: &str) -> File {
+     let path = Path::new(file_out);
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:135:
+         ));
+     }
+ 
+[31m-    File::create(path)
+(B[m[31m-        .expect(&format!("[ERROR] cannot create {:?} output file", file_out))
+(B[m[32m+    File::create(path).expect(&format!("[ERROR] cannot create {:?} output file", file_out))
+(B[m }
+ 
+ pub fn fwrite_chunk(
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:144:
+     chunk: &Vec<Vec<Vec<u8>>>,
+     width: usize,
+     height: usize,
+[31m-    depth: usize
+(B[m[32m+    depth: usize,
+(B[m ) {
+     let mut file: File = create_file_out(file_out);
+     writeln!(file, "{}", width).expect("Failed to write width");
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/chunk_io.rs:162:
+     }
+ }
+ 
+[31m-pub fn fwrite_encode(
+(B[m[31m-    file_out: &str,
+(B[m[31m-    code: &[u8]
+(B[m[31m-) {
+(B[m[32m+pub fn fwrite_encode(file_out: &str, code: &[u8]) {
+(B[m     let mut file: File = create_file_out(file_out);
+[31m-    file.write(&code).expect(&format!("Cannot write bytes in {}", file_out));
+(B[m[32m+    file.write(&code)
+(B[m[32m+        .expect(&format!("Cannot write bytes in {}", file_out));
+(B[m }
+ 
+[31m-
+(B[m pub fn fread_code(file_in: &str) -> Vec<u8> {
+[31m-    return fs::read(file_in)
+(B[m[31m-        .expect(&format!("[ERROR] cannot read {:?} file", file_in));
+(B[m[32m+    return fs::read(file_in).expect(&format!("[ERROR] cannot read {:?} file", file_in));
+(B[m }
+[32m+
+(B[mDiff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/lib.rs:1:
+ pub mod libchunk {
+     pub mod chunk;
+[32m+    pub mod chunk_compress;
+(B[m     pub mod chunk_gen;
+     pub mod chunk_process;
+     pub mod chunk_transform;
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/lib.rs:6:
+[31m-    pub mod chunk_compress;
+(B[m }
+ 
+ pub mod chunk_io;
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:1:
+ use crate::libchunk::chunk::BLOCK_AIR;
+ use crate::libchunk::chunk::*;
+ 
+[31m-
+(B[m #[derive(Default)]
+ struct Run {
+     num_occurrences: usize,
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:8:
+[31m-    block: u8
+(B[m[32m+    block: u8,
+(B[m }
+ 
+ const B0: usize = 0;
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:16:
+ const IDX_BIT_B1: usize = 7;
+ const IDX_BIT_B0: usize = 6;
+ 
+[31m-
+(B[m const MAX_NUM_OCCURRENCES: usize = 4095;
+ 
+[31m-
+(B[m[31m-
+(B[m[31m-fn flatten(
+(B[m[31m-    chunk: &Vec<Vec<Vec<u8>>>,
+(B[m[31m-    width: usize,
+(B[m[31m-    height: usize,
+(B[m[31m-    depth: usize,
+(B[m[31m-) -> Vec<u8> {
+(B[m[32m+fn flatten(chunk: &Vec<Vec<Vec<u8>>>, width: usize, height: usize, depth: usize) -> Vec<u8> {
+(B[m     let mut array: Vec<u8> = vec![0; width * height * depth];
+ 
+     for y in 0..height {
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:54:
+ 
+     while idx < flat_chunk.len() {
+         if last_block != flat_chunk[idx] {
+[31m-            runs.push(Run{num_occurrences: num_occurrences, block: last_block});
+(B[m[32m+            runs.push(Run {
+(B[m[32m+                num_occurrences: num_occurrences,
+(B[m[32m+                block: last_block,
+(B[m[32m+            });
+(B[m             last_block = flat_chunk[idx];
+             num_occurrences = 1;
+         } else {
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:62:
+         }
+ 
+         if num_occurrences == MAX_NUM_OCCURRENCES {
+[31m-            runs.push(Run{num_occurrences: MAX_NUM_OCCURRENCES, block: last_block});
+(B[m[32m+            runs.push(Run {
+(B[m[32m+                num_occurrences: MAX_NUM_OCCURRENCES,
+(B[m[32m+                block: last_block,
+(B[m[32m+            });
+(B[m             num_occurrences = 0;
+         }
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:70:
+     }
+ 
+     if num_occurrences > 0 {
+[31m-        runs.push(Run{num_occurrences: num_occurrences, block: last_block});
+(B[m[31m-    } 
+(B[m[32m+        runs.push(Run {
+(B[m[32m+            num_occurrences: num_occurrences,
+(B[m[32m+            block: last_block,
+(B[m[32m+        });
+(B[m[32m+    }
+(B[m 
+     runs
+ }
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:78:
+ 
+[31m-
+(B[m fn encode_run(bytes: &mut Vec<u8>, run: &Run) {
+     let mut byte = 0u8;
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:84:
+         BLOCK_GRASS => byte |= 1 << IDX_BIT_B0,
+         BLOCK_WOOD => byte |= 1 << IDX_BIT_B1,
+         BLOCK_STONE => byte |= (1 << IDX_BIT_B0) | (1 << IDX_BIT_B1),
+[31m-        _ => ()
+(B[m[32m+        _ => (),
+(B[m     }
+ 
+     if run.num_occurrences < (1 << B5) {
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:97:
+         bytes.push(byte);
+     } else {
+         // bb10nnnn nnnnnnnn
+[31m-        
+(B[m[32m+
+(B[m         byte |= 1 << B5;
+ 
+         // Primul octet:
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:119:
+     }
+ }
+ 
+[31m-
+(B[m pub fn chunk_encode(
+     chunk: &Vec<Vec<Vec<u8>>>,
+     width: usize,
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:147:
+     let mut idx: usize = 0;
+ 
+     while idx < code.len() {
+[31m-        let block: u8 = match (code[idx] & (1 << IDX_BIT_B1) > 0, code[idx] & (1 << IDX_BIT_B0) > 0)  {
+(B[m[32m+        let block: u8 = match (
+(B[m[32m+            code[idx] & (1 << IDX_BIT_B1) > 0,
+(B[m[32m+            code[idx] & (1 << IDX_BIT_B0) > 0,
+(B[m[32m+        ) {
+(B[m             (true, true) => BLOCK_STONE,  // b1b0 = 11
+             (true, false) => BLOCK_WOOD,  // b1b0 = 10
+             (false, true) => BLOCK_GRASS, // b1b0 = 01
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_compress.rs:154:
+[31m-            _ => BLOCK_AIR                // b1b0 = 00
+(B[m[32m+            _ => BLOCK_AIR,               // b1b0 = 00
+(B[m         };
+[31m-
+(B[m 
+         let mut num_occurrences = 0usize;
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_gen.rs:1:
+[31m-use std::cmp::{min, max};
+(B[m[32m+use std::cmp::{max, min};
+(B[m 
+[31m-pub fn is_inside(
+(B[m[31m-    width: usize, height: usize, depth: usize,
+(B[m[31m-    x: isize, y: isize, z: isize
+(B[m[31m-) -> bool {
+(B[m[31m-    0 <= x && x < (width as isize)
+(B[m[31m-    && 0 <= y && y < (height as isize)
+(B[m[31m-    && 0 <= z && z < (depth as isize)
+(B[m[31m-
+(B[m[32m+pub fn is_inside(width: usize, height: usize, depth: usize, x: isize, y: isize, z: isize) -> bool {
+(B[m[32m+    0 <= x
+(B[m[32m+        && x < (width as isize)
+(B[m[32m+        && 0 <= y
+(B[m[32m+        && y < (height as isize)
+(B[m[32m+        && 0 <= z
+(B[m[32m+        && z < (depth as isize)
+(B[m }
+ 
+[31m-
+(B[m pub fn chunk_place_block(
+     chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    width: usize, height: usize, depth: usize,
+(B[m[31m-    x: isize, y: isize, z: isize,
+(B[m[31m-    block: u8
+(B[m[32m+    width: usize,
+(B[m[32m+    height: usize,
+(B[m[32m+    depth: usize,
+(B[m[32m+    x: isize,
+(B[m[32m+    y: isize,
+(B[m[32m+    z: isize,
+(B[m[32m+    block: u8,
+(B[m ) {
+     if !is_inside(width, height, depth, x, y, z) {
+         return;
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_gen.rs:23:
+     chunk[x as usize][y as usize][z as usize] = block;
+ }
+ 
+[31m-
+(B[m[31m-
+(B[m[31m-
+(B[m pub fn chunk_fill_cuboid(
+     chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    width: usize, height: usize, depth: usize,
+(B[m[31m-    x0: isize, y0: isize, z0: isize,
+(B[m[31m-    x1: isize, y1: isize, z1: isize,
+(B[m[31m-    block: u8
+(B[m[32m+    width: usize,
+(B[m[32m+    height: usize,
+(B[m[32m+    depth: usize,
+(B[m[32m+    x0: isize,
+(B[m[32m+    y0: isize,
+(B[m[32m+    z0: isize,
+(B[m[32m+    x1: isize,
+(B[m[32m+    y1: isize,
+(B[m[32m+    z1: isize,
+(B[m[32m+    block: u8,
+(B[m ) {
+     let min_x = max(min(x0, x1), 0isize);
+     let min_y = max(min(y0, y1), 0isize);
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_gen.rs:44:
+     for x in min_x..=max_x {
+         for y in min_y..=max_y {
+             for z in min_z..=max_z {
+[31m-                chunk_place_block(
+(B[m[31m-                    chunk, width, height, depth, 
+(B[m[31m-                    x, y, z, block);
+(B[m[32m+                chunk_place_block(chunk, width, height, depth, x, y, z, block);
+(B[m             }
+[31m-        } 
+(B[m[32m+        }
+(B[m     }
+ }
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_gen.rs:55:
+[31m-
+(B[m[31m-fn euclidian_dist(
+(B[m[31m-    x0: isize, y0: isize, z0: isize,
+(B[m[31m-    x1: isize, y1: isize, z1: isize
+(B[m[31m-) -> f32 {
+(B[m[31m-    (
+(B[m[31m-        (x0 - x1).pow(2) as f32
+(B[m[31m-        + (y0 - y1).pow(2) as f32
+(B[m[31m-        + (z0 - z1).pow(2) as f32
+(B[m[31m-    ).sqrt()
+(B[m[32m+fn euclidian_dist(x0: isize, y0: isize, z0: isize, x1: isize, y1: isize, z1: isize) -> f32 {
+(B[m[32m+    ((x0 - x1).pow(2) as f32 + (y0 - y1).pow(2) as f32 + (z0 - z1).pow(2) as f32).sqrt()
+(B[m }
+ 
+ pub fn chunk_fill_sphere(
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_gen.rs:68:
+     chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    width: usize, height: usize, depth: usize,
+(B[m[31m-    x: isize, y: isize, z: isize,
+(B[m[31m-    radius: f32, block: u8
+(B[m[32m+    width: usize,
+(B[m[32m+    height: usize,
+(B[m[32m+    depth: usize,
+(B[m[32m+    x: isize,
+(B[m[32m+    y: isize,
+(B[m[32m+    z: isize,
+(B[m[32m+    radius: f32,
+(B[m[32m+    block: u8,
+(B[m ) {
+     let r = radius.ceil().abs() as isize;
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:2:
+ 
+ fn wrapper(
+     chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    width: usize, height: usize, depth: usize,
+(B[m[31m-    x: usize, y: usize, z: usize,
+(B[m[31m-    target_block: u8, shell_block: u8
+(B[m[32m+    width: usize,
+(B[m[32m+    height: usize,
+(B[m[32m+    depth: usize,
+(B[m[32m+    x: usize,
+(B[m[32m+    y: usize,
+(B[m[32m+    z: usize,
+(B[m[32m+    target_block: u8,
+(B[m[32m+    shell_block: u8,
+(B[m ) {
+     for i in -1..=1 {
+         let px = (x as isize) + (i as isize);
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:30:
+                     continue;
+                 }
+ 
+[31m-
+(B[m                 if !is_inside(width, height, depth, px, py, pz) {
+                     continue;
+                 }
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:50:
+ 
+ pub fn chunk_shell(
+     chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    width: usize, height: usize, depth: usize,
+(B[m[31m-    target_block: u8, shell_block: u8
+(B[m[32m+    width: usize,
+(B[m[32m+    height: usize,
+(B[m[32m+    depth: usize,
+(B[m[32m+    target_block: u8,
+(B[m[32m+    shell_block: u8,
+(B[m ) {
+     let mut points_stack: Vec<Vec<usize>> = vec![];
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:62:
+                     continue;
+                 }
+ 
+[31m-                points_stack.push(
+(B[m[31m-                    vec![x, y, z]
+(B[m[31m-                );
+(B[m[31m-
+(B[m[32m+                points_stack.push(vec![x, y, z]);
+(B[m             }
+         }
+     }
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:76:
+         let py = pct[1];
+         let pz = pct[2];
+ 
+[31m-        wrapper(chunk, width, height, depth,
+(B[m[31m-            px, py, pz,
+(B[m[31m-            target_block, shell_block);
+(B[m[32m+        wrapper(
+(B[m[32m+            chunk,
+(B[m[32m+            width,
+(B[m[32m+            height,
+(B[m[32m+            depth,
+(B[m[32m+            px,
+(B[m[32m+            py,
+(B[m[32m+            pz,
+(B[m[32m+            target_block,
+(B[m[32m+            shell_block,
+(B[m[32m+        );
+(B[m     }
+ }
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:85:
+ fn fill_algorithm_x0z(
+     chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    width: usize, height: usize, depth: usize,
+(B[m[31m-    x: isize, y: isize, z: isize,
+(B[m[31m-    target_block: u8, new_block: u8
+(B[m[32m+    width: usize,
+(B[m[32m+    height: usize,
+(B[m[32m+    depth: usize,
+(B[m[32m+    x: isize,
+(B[m[32m+    y: isize,
+(B[m[32m+    z: isize,
+(B[m[32m+    target_block: u8,
+(B[m[32m+    new_block: u8,
+(B[m ) {
+     if !is_inside(width, height, depth, x as isize, y as isize, z as isize) {
+         return;
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:108:
+             continue;
+         }
+ 
+[31m-        fill_algorithm_x0z(chunk, width, height, depth,
+(B[m[31m-            nx, y, nz,            
+(B[m[31m-            target_block, new_block);
+(B[m[32m+        fill_algorithm_x0z(
+(B[m[32m+            chunk,
+(B[m[32m+            width,
+(B[m[32m+            height,
+(B[m[32m+            depth,
+(B[m[32m+            nx,
+(B[m[32m+            y,
+(B[m[32m+            nz,
+(B[m[32m+            target_block,
+(B[m[32m+            new_block,
+(B[m[32m+        );
+(B[m     }
+ }
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:117:
+[31m-
+(B[m pub fn chunk_fill_xz(
+     chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    width: usize, height: usize, depth: usize,
+(B[m[31m-    x: isize, y: isize, z: isize,
+(B[m[31m-    block: u8
+(B[m[32m+    width: usize,
+(B[m[32m+    height: usize,
+(B[m[32m+    depth: usize,
+(B[m[32m+    x: isize,
+(B[m[32m+    y: isize,
+(B[m[32m+    z: isize,
+(B[m[32m+    block: u8,
+(B[m ) {
+     if !is_inside(width, height, depth, x, y, z) {
+         return;
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:126:
+     }
+ 
+[31m-    fill_algorithm_x0z(chunk, width, height, depth, x, y, z, chunk[x as usize][y as usize][z as usize], block);
+(B[m[32m+    fill_algorithm_x0z(
+(B[m[32m+        chunk,
+(B[m[32m+        width,
+(B[m[32m+        height,
+(B[m[32m+        depth,
+(B[m[32m+        x,
+(B[m[32m+        y,
+(B[m[32m+        z,
+(B[m[32m+        chunk[x as usize][y as usize][z as usize],
+(B[m[32m+        block,
+(B[m[32m+    );
+(B[m }
+ 
+[31m-
+(B[m fn fill_algorithm_3d(
+     chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    width: usize, height: usize, depth: usize,
+(B[m[31m-    x: isize, y: isize, z: isize,
+(B[m[31m-    target_block: u8, new_block: u8
+(B[m[32m+    width: usize,
+(B[m[32m+    height: usize,
+(B[m[32m+    depth: usize,
+(B[m[32m+    x: isize,
+(B[m[32m+    y: isize,
+(B[m[32m+    z: isize,
+(B[m[32m+    target_block: u8,
+(B[m[32m+    new_block: u8,
+(B[m ) {
+     if !is_inside(width, height, depth, x, y, z) {
+         return;
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:157:
+             continue;
+         }
+ 
+[31m-        fill_algorithm_3d(chunk, width, height, depth,
+(B[m[31m-            nx, ny, nz,
+(B[m[31m-            target_block, new_block);
+(B[m[32m+        fill_algorithm_3d(
+(B[m[32m+            chunk,
+(B[m[32m+            width,
+(B[m[32m+            height,
+(B[m[32m+            depth,
+(B[m[32m+            nx,
+(B[m[32m+            ny,
+(B[m[32m+            nz,
+(B[m[32m+            target_block,
+(B[m[32m+            new_block,
+(B[m[32m+        );
+(B[m     }
+ }
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:166:
+[31m-
+(B[m pub fn chunk_fill(
+     chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    width: usize, height: usize, depth: usize,
+(B[m[31m-    x: isize, y: isize, z: isize,
+(B[m[31m-    block: u8
+(B[m[32m+    width: usize,
+(B[m[32m+    height: usize,
+(B[m[32m+    depth: usize,
+(B[m[32m+    x: isize,
+(B[m[32m+    y: isize,
+(B[m[32m+    z: isize,
+(B[m[32m+    block: u8,
+(B[m ) {
+     if !is_inside(width, height, depth, x as isize, y as isize, z as isize) {
+         return;
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_process.rs:178:
+     }
+ 
+     fill_algorithm_3d(
+[31m-        chunk, width, height, depth,
+(B[m[31m-        x, y, z,
+(B[m[31m-        chunk[x as usize][y as usize][z as usize], block);
+(B[m[31m-
+(B[m[32m+        chunk,
+(B[m[32m+        width,
+(B[m[32m+        height,
+(B[m[32m+        depth,
+(B[m[32m+        x,
+(B[m[32m+        y,
+(B[m[32m+        z,
+(B[m[32m+        chunk[x as usize][y as usize][z as usize],
+(B[m[32m+        block,
+(B[m[32m+    );
+(B[m }
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_transform.rs:2:
+ 
+ pub fn chunk_rotate_y(
+     chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    width: &mut usize, height: &mut usize, depth: &mut usize
+(B[m[32m+    width: &mut usize,
+(B[m[32m+    height: &mut usize,
+(B[m[32m+    depth: &mut usize,
+(B[m ) {
+     let mut new_mat: Vec<Vec<Vec<u8>>> = vec![vec![vec![BLOCK_AIR; *width]; *height]; *depth];
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_transform.rs:24:
+ 
+ pub fn chunk_apply_gravity(
+     _chunk: &mut Vec<Vec<Vec<u8>>>,
+[31m-    _width: &mut usize, _height: &mut usize, _depth: &mut usize
+(B[m[32m+    _width: &mut usize,
+(B[m[32m+    _height: &mut usize,
+(B[m[32m+    _depth: &mut usize,
+(B[m ) {
+     todo!("task 8");
+ }
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_transform.rs:31:
+[32m+
+(B[mDiff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:5:
+ use std::io::{BufRead, BufReader};
+ 
+ use blocks_in_3_d::chunk_io::*;
+[32m+use blocks_in_3_d::libchunk::chunk_compress::*;
+(B[m use blocks_in_3_d::libchunk::chunk_gen::*;
+[31m-use blocks_in_3_d::libchunk::chunk_transform::*;
+(B[m use blocks_in_3_d::libchunk::chunk_process::*;
+[31m-use blocks_in_3_d::libchunk::chunk_compress::*;
+(B[m[32m+use blocks_in_3_d::libchunk::chunk_transform::*;
+(B[m 
+[31m-
+(B[m[31m-
+(B[m[31m-
+(B[m fn cmp_binary_files(file1: &str, file2: &str) -> bool {
+[31m-    let f1 = fs::read(file1)
+(B[m[31m-        .expect(&format!("[EROARE] cannot read file {:?}", file1));
+(B[m[31m-    let f2 = fs::read(file2)
+(B[m[31m-        .expect(&format!("[EROARE] cannot read file {:?}", file2));
+(B[m[32m+    let f1 = fs::read(file1).expect(&format!("[EROARE] cannot read file {:?}", file1));
+(B[m[32m+    let f2 = fs::read(file2).expect(&format!("[EROARE] cannot read file {:?}", file2));
+(B[m     f1 == f2
+ }
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:24:
+[31m-
+(B[m fn cmp_text_files(file1: &str, file2: &str) -> bool {
+     // Read files as strings
+[31m-    let content1 = fs::read_to_string(file1)
+(B[m[31m-        .expect(&format!("[ERROR] cannot read file {:?}", file1));
+(B[m[31m-    let content2 = fs::read_to_string(file2)
+(B[m[31m-        .expect(&format!("[ERROR] cannot read file {:?}", file2));
+(B[m[32m+    let content1 =
+(B[m[32m+        fs::read_to_string(file1).expect(&format!("[ERROR] cannot read file {:?}", file1));
+(B[m[32m+    let content2 =
+(B[m[32m+        fs::read_to_string(file2).expect(&format!("[ERROR] cannot read file {:?}", file2));
+(B[m 
+     let lines1: Vec<&str> = content1.lines().collect();
+     let lines2: Vec<&str> = content2.lines().collect();
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:48:
+     true // all lines match
+ }
+ 
+[31m-
+(B[m[31m-
+(B[m #[rstest]
+ #[case(0)]
+ #[case(1)]
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:63:
+ 
+     let (mut chunk, width, height, depth) = fread_chunk(&file_in);
+     let (x, y, z, block) = fread_block_coordinates(&file_params);
+[31m-    
+(B[m[32m+
+(B[m     chunk_place_block(&mut chunk, width, height, depth, x, y, z, block);
+     fwrite_chunk(&file_out, &chunk, width, height, depth);
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:89:
+     let mut reader = BufReader::new(file);
+ 
+     let mut line = String::new();
+[31m-    reader.read_line(&mut line).unwrap(); 
+(B[m[32m+    reader.read_line(&mut line).unwrap();
+(B[m 
+     // Split line by whitespace
+     let mut parts = line.trim().split_whitespace();
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:96:
+ 
+[31m-    let x0: isize = parts.next().expect("Missing x0").parse().expect("Invalid x0");
+(B[m[31m-    let y0: isize = parts.next().expect("Missing y0").parse().expect("Invalid y0");
+(B[m[31m-    let z0: isize = parts.next().expect("Missing z0").parse().expect("Invalid z0");
+(B[m[32m+    let x0: isize = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing x0")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid x0");
+(B[m[32m+    let y0: isize = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing y0")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid y0");
+(B[m[32m+    let z0: isize = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing z0")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid z0");
+(B[m 
+[31m-    let x1: isize = parts.next().expect("Missing x1").parse().expect("Invalid x1");
+(B[m[31m-    let y1: isize = parts.next().expect("Missing y1").parse().expect("Invalid y1");
+(B[m[31m-    let z1: isize = parts.next().expect("Missing z1").parse().expect("Invalid z1");
+(B[m[32m+    let x1: isize = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing x1")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid x1");
+(B[m[32m+    let y1: isize = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing y1")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid y1");
+(B[m[32m+    let z1: isize = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing z1")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid z1");
+(B[m 
+[31m-    let block: u8 = parts.next().expect("Missing block").parse().expect("Invalid block");
+(B[m[32m+    let block: u8 = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing block")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid block");
+(B[m 
+     let (mut chunk, width, height, depth) = fread_chunk(&file_in);
+[31m-    chunk_fill_cuboid(&mut chunk, width, height, depth, x0, y0, z0, x1, y1, z1, block);
+(B[m[32m+    chunk_fill_cuboid(
+(B[m[32m+        &mut chunk, width, height, depth, x0, y0, z0, x1, y1, z1, block,
+(B[m[32m+    );
+(B[m     fwrite_chunk(&file_out, &chunk, width, height, depth);
+ 
+     assert!(
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:116:
+     )
+ }
+ 
+[31m-
+(B[m #[rstest]
+ #[case(0)]
+ #[case(1)]
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:131:
+     let mut reader = BufReader::new(file);
+ 
+     let mut line = String::new();
+[31m-    reader.read_line(&mut line).unwrap(); 
+(B[m[32m+    reader.read_line(&mut line).unwrap();
+(B[m 
+     // Split line by whitespace
+     let mut parts = line.trim().split_whitespace();
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:140:
+     let y: isize = parts.next().expect("Missing y").parse().expect("Invalid y");
+     let z: isize = parts.next().expect("Missing z").parse().expect("Invalid z");
+ 
+[31m-    let radius: f32 = parts.next().expect("Missing radius").parse().expect("Invalid radius");
+(B[m[31m-    let block: u8 = parts.next().expect("Missing block").parse().expect("Invalid block");
+(B[m[32m+    let radius: f32 = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing radius")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid radius");
+(B[m[32m+    let block: u8 = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing block")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid block");
+(B[m 
+[31m-
+(B[m     let (mut chunk, width, height, depth) = fread_chunk(&file_in);
+     chunk_fill_sphere(&mut chunk, width, height, depth, x, y, z, radius, block);
+     fwrite_chunk(&file_out, &chunk, width, height, depth);
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:156:
+     )
+ }
+ 
+[31m-
+(B[m #[rstest]
+ #[case(0)]
+ #[case(1)]
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:167:
+     let file_out: String = format!("../tests-out/method-rs/task4/{}.out", idx);
+     let file_ref: String = format!("../tests/ref_output/task4/{}.ref", idx);
+ 
+[31m-
+(B[m[31m-    
+(B[m     let file = File::open(file_params).unwrap();
+     let mut reader = BufReader::new(file);
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:175:
+     let mut line = String::new();
+[31m-    reader.read_line(&mut line).unwrap(); 
+(B[m[32m+    reader.read_line(&mut line).unwrap();
+(B[m 
+     // Split line by whitespace
+     let mut parts = line.trim().split_whitespace();
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:180:
+ 
+[31m-    let target_block: u8 = parts.next().expect("Missing target block").parse().expect("Invalid target block");
+(B[m[31m-    let shell_block: u8 = parts.next().expect("Missing shell block").parse().expect("Invalid shell block");
+(B[m[32m+    let target_block: u8 = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing target block")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid target block");
+(B[m[32m+    let shell_block: u8 = parts
+(B[m[32m+        .next()
+(B[m[32m+        .expect("Missing shell block")
+(B[m[32m+        .parse()
+(B[m[32m+        .expect("Invalid shell block");
+(B[m 
+     let (mut chunk, width, height, depth) = fread_chunk(&file_in);
+     chunk_shell(&mut chunk, width, height, depth, target_block, shell_block);
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:193:
+     )
+ }
+ 
+[31m-
+(B[m #[rstest]
+ #[case(0)]
+ #[case(1)]
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:207:
+ 
+     let (mut chunk, width, height, depth) = fread_chunk(&file_in);
+     let (x, y, z, block) = fread_block_coordinates(&file_params);
+[31m-    
+(B[m[32m+
+(B[m     chunk_fill_xz(&mut chunk, width, height, depth, x, y, z, block);
+     fwrite_chunk(&file_out, &chunk, width, height, depth);
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:219:
+     )
+ }
+ 
+[31m-
+(B[m #[rstest]
+ #[case(0)]
+ #[case(1)]
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:234:
+ 
+     let (mut chunk, width, height, depth) = fread_chunk(&file_in);
+     let (x, y, z, block) = fread_block_coordinates(&file_params);
+[31m-    
+(B[m[32m+
+(B[m     chunk_fill(&mut chunk, width, height, depth, x, y, z, block);
+     fwrite_chunk(&file_out, &chunk, width, height, depth);
+ 
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:246:
+     )
+ }
+ 
+[31m-
+(B[m[31m-
+(B[m #[rstest]
+ #[case(0)]
+ #[case(1)]
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:270:
+     )
+ }
+ 
+[31m-
+(B[m #[rstest]
+ #[case(0)]
+ #[case(1)]
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:309:
+     let (chunk, width, height, depth) = fread_chunk(&file_in);
+ 
+     let code: Vec<u8> = chunk_encode(&chunk, width, height, depth);
+[31m-    fwrite_encode(&file_out, &code);    
+(B[m[32m+    fwrite_encode(&file_out, &code);
+(B[m 
+     assert!(
+         cmp_binary_files(&file_out, &file_ref),
+Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/tests/tests.rs:336:
+ 
+     let chunk = chunk_decode(&code, width, height, depth);
+     fwrite_chunk(&file_out, &chunk, width, height, depth);
+[31m-
+(B[m 
+     assert!(
+         cmp_text_files(&file_out, &file_ref),

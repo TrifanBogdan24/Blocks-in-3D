@@ -83,7 +83,7 @@ case "$2" in
         ;;
     -t|--task)
         if [[ -n "$3" && "$3" =~ ^[0-9]+$ ]] ; then
-            if [[ "$3" -lt $MIN_TASK_IDX || "$3" -gt $MIN_TASK_IDX ]] ; then
+            if [[ "$3" -lt $MIN_TASK_IDX || "$3" -gt $MAX_TASK_IDX ]] ; then
                 echo "[ERROR] Invalid task index $3 to generate images for." >&2
                 exit 255
             fi

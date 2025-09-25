@@ -1,0 +1,58 @@
+name: Run Tests on Implementation in Rust
+
+on:
+    push:
+        branches: main
+        paths: ["method-rs/**", "tests/**", "scripts/**", ".github/workflows/**"]
+    pull_request:
+        branches: main
+        paths: ["method-rs/**", "tests/**", "scripts/**", ".github/workflows/**"]
+
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Rust 🦀 (stable)
+        # actions-rs/toolchain@v1 is now deprecated
+        uses: dtolnay/rust-toolchain@stable
+      
+      - name: 📥 Install dependencies
+        run: |
+            chmod +x setup-py.sh
+            sudo ./setup-py.sh
+        
+      - name: ✅ Run tests
+        working-directory: ./method-rs
+        run: |
+            chmod +x check.sh
+            ./check.sh 2>&1 | tee tests_results.txt
+
+      - name: 🖼️ Generate Images
+        run: |
+          chmod +x image-generator.sh
+          ./image-generator.sh -rs --all
+
+      - name: 📦 Prepare artifact directory
+        if: always()
+        run: |
+          mkdir -p upload/tests-out
+          cp ./method-rs/tests_results.txt upload || echo "ERROR"
+          cp -r tests-out/method-rs/* upload/tests-out || echo "ERROR"
+          cp -r images/ upload || echo "ERROR"
+          
+          # Rename file extension: "out-method-rs.png" -> "out.png"
+          find . -type f -iname "*out-method-rs.png" -exec bash -c 'for f; do mv "$f" "${f/out-method-rs.png/out.png}"; done' _ {} + || echo "ERROR"
+
+
+      - name: 💾 Upload test logs as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checker-logs
+          path: upload
+
+          retention-days: 7

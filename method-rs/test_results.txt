@@ -1,0 +1,98 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running unittests src/lib.rs (target/debug/deps/blocks_in_3_d-ee289ed83cb4bbc9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/tests.rs (target/debug/deps/tests-bf430da002b7839b)
+
+running 42 tests
+test test_task10::case_1 ... ok
+test test_task10::case_2 ... ok
+test test_task1::case_1 ... ok
+test test_task1::case_2 ... ok
+test test_task1::case_3 ... ok
+test test_task1::case_4 ... ok
+test test_task10::case_5 ... ok
+test test_task10::case_3 ... ok
+test test_task2::case_1 ... ok
+test test_task2::case_3 ... ok
+test test_task10::case_4 ... ok
+test test_task3::case_2 ... ok
+test test_task4::case_1 ... ok
+test test_task2::case_2 ... ok
+test test_task4::case_3 ... ok
+test test_task3::case_1 ... ok
+test test_task4::case_2 ... ok
+test test_task3::case_3 ... ok
+test test_task5::case_4 ... ok
+test test_task5::case_1 ... ok
+test test_task5::case_3 ... ok
+test test_task6::case_2 ... ok
+test test_task6::case_4 ... ok
+test test_task5::case_2 ... ok
+test test_task6::case_3 ... ok
+test test_task7::case_1 ... ok
+test test_task7::case_3 ... ok
+test test_task6::case_1 ... ok
+test test_task8::case_1 ... FAILED
+test test_task8::case_2 ... FAILED
+test test_task8::case_3 ... FAILED
+test test_task6::case_5 ... ok
+test test_task8::case_5 ... FAILED
+test test_task7::case_2 ... ok
+test test_task9::case_1 ... ok
+test test_task8::case_4 ... FAILED
+test test_task8::case_6 ... FAILED
+test test_task9::case_2 ... ok
+test test_task9::case_4 ... ok
+test test_task9::case_3 ... ok
+test test_task9::case_5 ... ok
+test test_task7::case_4 ... ok
+
+failures:
+
+---- test_task8::case_1 stdout ----
+
+thread 'test_task8::case_1' panicked at src/libchunk/chunk_transform.rs:29:5:
+not yet implemented: task 8
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- test_task8::case_2 stdout ----
+
+thread 'test_task8::case_2' panicked at src/libchunk/chunk_transform.rs:29:5:
+not yet implemented: task 8
+
+---- test_task8::case_3 stdout ----
+
+thread 'test_task8::case_3' panicked at src/libchunk/chunk_transform.rs:29:5:
+not yet implemented: task 8
+
+---- test_task8::case_5 stdout ----
+
+thread 'test_task8::case_5' panicked at src/libchunk/chunk_transform.rs:29:5:
+not yet implemented: task 8
+
+---- test_task8::case_4 stdout ----
+
+thread 'test_task8::case_4' panicked at src/libchunk/chunk_transform.rs:29:5:
+not yet implemented: task 8
+
+---- test_task8::case_6 stdout ----
+
+thread 'test_task8::case_6' panicked at src/libchunk/chunk_transform.rs:29:5:
+not yet implemented: task 8
+
+
+failures:
+    test_task8::case_1
+    test_task8::case_2
+    test_task8::case_3
+    test_task8::case_4
+    test_task8::case_5
+    test_task8::case_6
+
+test result: FAILED. 36 passed; 6 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `--test tests`

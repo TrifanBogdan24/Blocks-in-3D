@@ -54,6 +54,7 @@ fn cmp_text_files(file1: &str, file2: &str) -> bool {
 #[case(0)]
 #[case(1)]
 #[case(2)]
+#[case(3)]
 fn test_task1(#[case] idx: usize) {
     let file_params: String = format!("../tests/params/task1/{}.param", idx);
     let file_in: String = format!("../tests/input/task1/{}.in", idx);
