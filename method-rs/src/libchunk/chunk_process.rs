@@ -60,7 +60,7 @@ pub fn chunk_shell(
     target_block: u8,
     shell_block: u8,
 ) {
-    let mut points_stack: Vec<Vec<usize>> = vec![];
+    let mut points_stack: Vec<(usize, usize, usize)> = vec![];
 
     for x in 0..width {
         for y in 0..height {
@@ -69,16 +69,16 @@ pub fn chunk_shell(
                     continue;
                 }
 
-                points_stack.push(vec![x, y, z]);
+                points_stack.push((x, y, z));
             }
         }
     }
 
     while !points_stack.is_empty() {
         let pct = points_stack.pop().expect("[ERROR] Empty stack");
-        let px = pct[0];
-        let py = pct[1];
-        let pz = pct[2];
+        let px = pct.0;
+        let py = pct.1;
+        let pz = pct.2;
 
         wrapper(
             chunk,

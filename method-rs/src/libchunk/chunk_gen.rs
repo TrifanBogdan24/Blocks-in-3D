@@ -70,7 +70,7 @@ pub fn chunk_fill_sphere(
     radius: f32,
     block: u8,
 ) {
-    let r = radius.ceil().abs() as isize;
+    let r = radius.ceil() as isize;
 
     for i in -r..=r {
         for j in -r..=r {
