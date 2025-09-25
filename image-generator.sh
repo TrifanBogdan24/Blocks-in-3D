@@ -23,11 +23,8 @@ function generate_task_images() {
 
     # Loop over each test index
     for (( idx=0; idx<num_task_tests; idx++ )); do
-        echo -n "Generating images for task$idx_task-test_$idx: "
-        
-        # Save cursor position, print flashing "pending"
-        tput sc
-        echo -ne "${YELLOW}${BLINK}pending${RESET}"
+        # Using \r (carriage return) moves the cursor to the start of the line, so we can overwrite it
+        echo -ne "Generating images for task$idx_task-test_$idx: ${YELLOW}pending${RESET}\r"
 
         # Don't generate the in/ref images if they already exist
         if [[ ! -f images/task$idx_task/$idx-in.png ]] ; then
@@ -39,11 +36,8 @@ function generate_task_images() {
 
         ./view3d.sh tests-out/$METHOD/task$idx_task/$idx.out -o images/task$idx_task/$idx-out-$METHOD.png
 
-        # Restore cursor, overwrite with "DONE"
-        tput rc   
-        echo -ne "${BLUE}DONE   ${RESET}"
-
-        echo ""
+        # Overwrite with "DONE" message
+        echo -e "Generating images for task$idx_task-test_$idx: ${BLUE}DONE   ${RESET}"
     done
 }
 
