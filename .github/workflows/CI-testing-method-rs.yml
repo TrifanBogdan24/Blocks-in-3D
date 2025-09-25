@@ -1,4 +1,4 @@
-name: Run Tests on Implementation in Rust
+name: Run Tests on Implementation in Rust 🦀
 
 on:
     push:
@@ -24,6 +24,7 @@ jobs:
         run: |
             chmod +x setup-py.sh
             sudo ./setup-py.sh
+            rustup component add rustfmt
         
       - name: ✅ Run tests
         working-directory: ./method-rs
@@ -41,6 +42,7 @@ jobs:
         run: |
           mkdir -p upload/tests-out
           cp ./method-rs/tests_results.txt upload || echo "ERROR"
+          cp ./method-rs/coding_style.txt upload || echo "No file for coding style errors"
           cp -r tests-out/method-rs/* upload/tests-out || echo "ERROR"
           cp -r images/ upload || echo "ERROR"
           
