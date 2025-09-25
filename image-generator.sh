@@ -22,6 +22,7 @@ function generate_task_images() {
     num_task_tests=$(ls "tests/input/task$idx_task/" | wc -l)
 
     # Loop over each test index
+    local idx
     for (( idx=0; idx<num_task_tests; idx++ )); do
         # Using \r (carriage return) moves the cursor to the start of the line, so we can overwrite it
         echo -ne "Generating images for task$idx_task-test_$idx: ${YELLOW}pending${RESET}\r"
