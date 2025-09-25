@@ -635,7 +635,7 @@ Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chu
 (B[m[32m+    _height: &mut usize,
 (B[m[32m+    _depth: &mut usize,
 (B[m ) {
-     todo!("task 8");
+     // TODO
  }
 Diff in /home/bogdan/Documents/Facultate/Blocks-in-3D/method-rs/src/libchunk/chunk_transform.rs:31:
 [32m+
