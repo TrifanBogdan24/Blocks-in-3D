@@ -92,7 +92,7 @@ Cazul în care `target_block` este egal cu `new_block` este tratat separat
 Operația presupune crearea unei noi matrice 3D, unde axele **Ox** și **Oz** sunt 
 interschimbate.
 
-> Practic: se interschimbă dimensiunile pentru **lățime** și **adâncime**,
+> Se interschimbă dimensiunile pentru **lățime** și **adâncime**,
 > în timp ce înălțimea rămâne neschimbată
 
 

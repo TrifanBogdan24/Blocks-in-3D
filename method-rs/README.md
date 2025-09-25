@@ -30,7 +30,6 @@ Structura proiectului:
 - Coordonatele de iterație pornesc de la **MIN** fiecărei axe și merg până la **MAX**.
 - Pentru eficiență și siguranță, limitez aceste coordonate de dimensiunile chunk-ului
 
-
 ```rs
 let min_x = max(min(x0, x1), 0isize);
 let min_y = max(min(y0, y1), 0isize);

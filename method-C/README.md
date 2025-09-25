@@ -118,6 +118,7 @@ typedef struct {
 } Pair;
 ```
 
+
 Pasul 2 al algoritmului de compresie returnează un array cu toate run-urile: `Pair *pair`.
 
 Funcțiile principale pentru compresie:
