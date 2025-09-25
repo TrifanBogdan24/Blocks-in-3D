@@ -78,8 +78,7 @@ Pair *get_pairs(char *array, int length, int *num_pairs) {
 
 
 
-void add_pair_to_bytes(unsigned char **bytes, int *length,
-    Pair pair) {
+void add_pair_to_bytes(unsigned char **bytes, int *length, Pair pair) {
     int num_occurrences = pair.num_occurrences;
     char block = pair.block;
 

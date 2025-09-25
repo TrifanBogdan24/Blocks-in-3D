@@ -16,9 +16,19 @@ Structura proiectului:
 - `chunk_io.rs`: API pentru citirea și scrierea chunk-urilor (inclusiv compresia datelor în format binar)
     în fișier.
 
-## Creare cuboid
+## 📌 Amplasare bloc
 
-Funcția primește două colțuri opuse ale unui paralelipiped dreptunghic.  
+- `is_inside`: verifică dacă un punct **(x, y, z)** se află în interiorul chunk-ului:
+  returnează **1** dacă este valid, altfel **0**
+
+- `chunk_place_block`: dacă coordonatele sunt valide, actualizează tipul blocului de la
+  poziția respectivă; dacă nu, funcția nu are efect.
+
+## 📦 Creare cuboid
+
+- Funcția primește două colțuri opuse ale unui paralelipiped dreptunghic.
+- Coordonatele de iterație pornesc de la **MIN** fiecărei axe și merg până la **MAX**.
+- Pentru eficiență și siguranță, limitez aceste coordonate de dimensiunile chunk-ului
 
 
 ```rs
@@ -40,9 +50,12 @@ for x in min_x..=max_x {
 ```
 
 
+## 🪩 Creare sferă
 
-## Creare sferă
+Notez cu `r` = întregul cel mai mare (`ceil`) la care se rotunjeste raza.
 
+Pentru fiecare offset din intervalul `[-r, r]` pe cele 3 axe, se calculează distanța euclidiană
+față de centru. Dacă distanța ≤ raza reală, plasez blocul; altfel, îl ignor.
 
 ```rs
 let r = radius.ceil() as isize;
@@ -64,36 +77,87 @@ for i in -r..=r {
 
 ## 📦 Înveliș
 
-Dacă `target_block` = `shell_block`, algoritmul clasic ar umple matricea complet.  
-Pentru a evita această problemă, folosesc o **stivă de coordonate (X,Y,Z)**
-având o implementare minimală sub forma unui vector de puncte 3D (tupluri).
+Mulțimea punctelor de interes care trebuiesc înfășurate
+este reprezentată de o **stivă de triplete**:
+- primul element -> coordonata X
+- al doilea  -> coordonata Y
+- al treilea -> coordonata Z
 
-Parcurgând matricea, coordonatele fiecarărui `target_block` se adaugă la finalul vectorului cu `.push()`
+> 💡 În Rust, un `Vec` funcționează și ca stivă, având deja implementate metodele `.push()` și `.pop()`.
 
-Apoi, pentru fiecare block extras din varful stivei,
-functia `wrapper` plasează `shell_block` în locul vecinilor diferiți de `target_block`.
+Stiva folosită de mine are următorul tip:
+```rs
+Vec<(usize, usize, usize)>
+```
+
+Inițial, stiva este goală.
+Pe măsură ce descopăr puncte valide, creez un tuplu **(x, y, z)** și îl adaug cu `.push()` în stivă.
+
+După ce toate blocurile din chunk au fost parcurse, încep procesul de învelire:
+cât timp stiva mai conține elemente,
+extrag un tuplu cu `.pop()`, îl "descompun" în coordonate
+și apelez funcția `wrapper` cu aceste valori.
+
+
+
+
+## Fill
+
+Algoritm recursiv de umplere: pornește dintr-un punct și vizitează vecinii de același tip.
+
+Dacă `target_block == new_block`, se va returna matricea inițială.
+
 
 ## Rotirea în jurul axei Oy
 
-Se alocă o nouă matrice:
-- `new_width = old_depth`
-- `new_depth = old_width`
+> Rotirea presupune schimbarea dimensiunilor dintre **lățime** și **adâncime**.  
 
-> Practic interschimbă dimensiunile pentru **lățime** și **adâncime**.
-
+Se alocă memorie pentru o nouă matrice 3D, inițializată complet cu **blocuri de aer**.  
 ```rs
 let mut new_mat: Vec<Vec<Vec<u8>>> = vec![vec![vec![BLOCK_AIR; *width]; *height]; *depth];
 ```
 
 
-Valorile sunt copiate conform regulii:  
+Iar ulterior, valorile sunt copiate (în 3 bucle **for**) din matricea veche în cea nouă,
+conform regulii: 
 ```rs
 new_mat[x][y][z] = chunk[z][y][depth - 1 - x]
 ```
+
 ## 📥 Compresie
 
-**Run**-urile se parcurg cu `.iter().for_each()`, iar codificararile se adauga la finalul sirului de octeti.
+Urmatoarea structura defineste un **run**:
+```rs
+#[derive(Default)]
+struct Run {
+    num_occurrences: usize,
+    block: u8,
+}
+```
 
+Funcțiile principale pentru compresie:
+- `flatten`: aplatizează matricea 3D și returnează un vector linearizat
+- `get_runs`: primește un slice la array-ul aplatizat și generează toate run-urile,
+    întorcând un `Vec<Run>`
+- `encode_run`: codifică un run într-unul sau doi octeți și îl adaugă la finalul codificării
+
+
+În `chunk_encode`, fiecare **run** este parcurs și transmis funcției `encode_run`
+folosind un **iterator** `for_each` pentru a adăuga octeții corespunzători în vectorul final.
+
+În stilul **programării funcționale**:
+```rs
+runs.iter().for_each(|run| encode_run(&mut bytes, run));
+```
+
+
+## 📤 Decompresie
+
+Spre deosebire de versiunea în C, aici dimensiunea codificării este deja cunoscută:
+`Vec<u8` păstrează automat numărul de elemente.
+
+Atât la compresie, cât și la decompresie, am folosit **pattern matching** asupra tipului de bloc,
+ceea ce face codul mai ușor de scris și de înțeles.
 
 
 ## ✅ Teste Unitare
