@@ -13,6 +13,16 @@ Proiectul reprezintă un bun exercițiu practic pentru a înțelege:
 cu [`rstest`](https://crates.io/crates/rstest) și am creat de la zero un script
 personalizat de `checker` pentru validarea rezultatelor.
 
+
+## Implementări multiple ale aceluiași proiect
+
+| Lang.   | Director                      |
+| :---:   | :---:                         |
+| 🇨      | [`method-C/`](./method-C/)    |
+| 🦀 Rust | [`method-rs/`](./method-rs/)  |
+
+
+
 ## Structura proiectului
 
 - `chunk_gen`
@@ -106,6 +116,15 @@ se parcurge volumul inițial prin 3 bucle **for** imbricate, acoperind toate coo
 
 ## 📥 Compresie
 
+În reprezentarea cu matrici tridimensionale, chunkurile largi ocupă cantități mari de memorie.
+Un chunk de dimensiuni 20,20,20 necesită memorarea tipului de bloc pentru 8000 de blocuri.
+
+Putem **reduce consumul de memorie** observând că blocurile alăturate sunt adesea identice.
+În loc să stocăm același bloc de multe ori, vom păstra tipul de bloc și numărul de apariții consecutive,
+conform schemei de *lossless compression* numite **run-length encoding** (**RLE**).
+
+
+Pași:
 1. **Serializare**: matricea 3D este aplatizată într-un vector liniar (ordinea **y->z->x**).  
 2. Vectorul este parcurs pentru a determina secvențe de blocuri identice consecutive: 
    - Se generează un vector de perechi `(num_occurrences, tip_block)`
@@ -126,6 +145,12 @@ array[idx] = chunk[x][y][z];
 
 ## 📤 Decompresie
 
+Odată encodate cu **RLE**, chunkurile ocupă mai puțină memorie,
+însă dacă vrem să le vizualizăm sau să aplicăm operații asupra lor,
+trebuie convertite înapoi în forma matricială.
+
+
+Pași:
 1. Se alocă matricea 3D pe baza dimensiunilor cunoscute
 2. Se itereaza vectorul codificarii (byte cu byte), reconstruind blocurile
 3. Decodificarea se bazează pe marcatorii din biții 5 și 6:
@@ -168,5 +193,29 @@ Tipul blocului ocupă cei mai semnificativi 2 biți.
 - Putere a lui 2: `1 << n`  
 - Setare bit: `byte |= (1 << i)`  
 - Verificare valoare (0/1) bit:
-  - In C: `if (byte & (1 << i))`
-  - In Rust: `if byte & (1 << i) > 0`
+  - În C: `if (byte & (1 << i))`
+  - În Rust: `if byte & (1 << i) > 0`
+
+
+## 🧪 GitHub Actions | CI Pipeline
+
+Niciun proiect nu este complet fără o suită de teste care să ruleze automat
+într-un workflow de **Integrare Continuă**.
+
+Inspirându-mă din checker-ul implementării în C,
+am scris **teste unitare parametrizate** în Rust și un **checker** propriu
+pentru a evalua proiectul printr-un scor final.
+
+Am configurat **GitHub Actions** astfel încât, la fiecare *push* sau *pull request*,
+să ruleze automat aceste checkere.
+
+Workflow-ul generează un **artefact** care include:
+- punctajul obținut
+- rezultatele fișierelor `.out`
+- imaginile generate pentru chunk-uri
+
+| Nume metoda | Workflow file |
+| :--- | :--- |
+| `method-C` | [.github/workflows/CI-testing-method-C.yml](./.github/workflows/CI-testing-method-C.yml) | 
+| `method-rs` | [.github/workflows/CI-testing-method-C.yml](./.github/workflows/CI-testing-method-rs.yml) | 
+
