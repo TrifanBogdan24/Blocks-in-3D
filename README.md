@@ -214,8 +214,8 @@ Workflow-ul generează un **artefact** care include:
 - rezultatele fișierelor `.out`
 - imaginile generate pentru chunk-uri
 
-| Nume metoda | Workflow file |
-| :--- | :--- |
-| `method-C` | [.github/workflows/CI-testing-method-C.yml](./.github/workflows/CI-testing-method-C.yml) | 
+| Nume metodă | Workflow file |
+| :---        | :--- |
+| `method-C`  | [.github/workflows/CI-testing-method-C.yml](./.github/workflows/CI-testing-method-C.yml) | 
 | `method-rs` | [.github/workflows/CI-testing-method-C.yml](./.github/workflows/CI-testing-method-rs.yml) | 
 
